@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import RecoidContextProvider from "@/providers/recoilContextProvider";
+import Web3ContextProvider from "@/providers/web3ReactProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +18,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <RecoidContextProvider>
+          <Web3ContextProvider>
+            {children}
+          </Web3ContextProvider>
+        </RecoidContextProvider>
+      </body>
     </html>
   );
 }
