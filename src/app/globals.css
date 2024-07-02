@@ -21,11 +21,11 @@
 
 @layer components {
   .container {
-    @apply w-full max-w-[90%] mx-auto;
+    @apply w-full max-w-[90%] mx-auto 
   }
 
   .btn {
-    @apply outline-none shadow-md transition-all duration-500 rounded text-sm
+    @apply outline-none shadow-md transition-all duration-500 rounded-md text-sm hover:shadow-lg
   }
 
   .spray {
