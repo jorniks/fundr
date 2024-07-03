@@ -25,7 +25,7 @@
   }
 
   .btn {
-    @apply outline-none shadow-md transition-all duration-500 rounded-md text-sm hover:shadow-lg
+    @apply outline-none shadow-md transition-all duration-500 rounded text-sm hover:shadow-lg
   }
 
   .spray {

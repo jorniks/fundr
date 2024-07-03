@@ -83,7 +83,7 @@ const ConnectedWalletButton = () => {
 
                 {/* Button to disconnect */}
                 <Button
-                  className="btn chestnut"
+                  className="btn chestnut py-2 px-3"
                   onClick={disconnectWallet}
                 >
                   Disconnect
