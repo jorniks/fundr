@@ -2,9 +2,21 @@
 import NavBar from "@/components/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch";
+import useTokenRead from "@/hooks/read-hooks/useTokenRead";
+import { useEffect, useState } from "react";
 
 
 export default function Home() {
+  const [mintableBalance, setMintableBalance] = useState(0)
+  const [isWalletBlacklisted, setIsWalletBlacklisted] = useState(true)
+  const { tokenSymbol, walletBalance, getMintableBalance, getBlacklistStatus } = useTokenRead()
+
+  
+  useEffect(() => {
+    getMintableBalance().then(setMintableBalance)
+    getBlacklistStatus().then(setIsWalletBlacklisted)
+  }, [getBlacklistStatus, getMintableBalance])
+  
 
   return (
     <main className="flex flex-col h-screen overflow-hidden bg-gray-100">
@@ -27,18 +39,18 @@ export default function Home() {
                   Your wallet will not be able to mint/burn LIRIO
                 </p>
               </div>
-              <Switch />
+              <Switch checked={isWalletBlacklisted} />
             </div>
 
             <div className="">
-              Minted token balance
+              Minted token balance {walletBalance}
             </div>
 
             <div className="space-y-6">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="font-semibold">
-                    <span className="mr-2 font-normal text-zinc-500">Mintable Bal</span> 1000 LIR
+                    <span className="mr-2 font-normal text-zinc-500">Mintable Bal</span> {mintableBalance?.toLocaleString()} {tokenSymbol}
                   </div>
                   
                   <div className="">
