@@ -1,4 +1,4 @@
-## WEB3-REACT WALLET CONNECTION DEMO
+## LIRIO TOKEN
 
 ## Getting Started
 

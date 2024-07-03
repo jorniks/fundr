@@ -5,7 +5,7 @@ import WalletButton from './WalletButtons'
 const NavBar = () => {
   return (
     <section className="border-b">
-      <div className="container py-2 flex items-center justify-between">
+      <div className="w-full max-w-[90%] mx-auto sm:px-8 py-2 flex items-center justify-between">
         <aside className="font-bold text-xl sm:text-2xl">
           <Link href="/">Lirio</Link>
         </aside>
