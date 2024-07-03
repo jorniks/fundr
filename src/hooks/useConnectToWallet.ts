@@ -1,12 +1,15 @@
 import { loadingState } from "@/app/state/atoms/atom";
 import { errorCode } from "@/lib/metamask-error-codes";
-import { getConnection } from "@/lib/wallet/connector";
+import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
+import { getConnection, switchNetwork } from "@/lib/wallet/connector";
 import { ConnectionType } from "@/lib/wallet/supported-connectors";
+import { useWeb3React } from "@web3-react/core";
 import { Connector } from "@web3-react/types";
 import { useSetRecoilState } from "recoil";
 
 export default function useConnectToWallet(connectionType: ConnectionType, setOpen: React.Dispatch<React.SetStateAction<boolean>>) {
   const setIsLoading = useSetRecoilState(loadingState)
+  const { chainId } = useWeb3React()
 
   const tryActivateConnector = async (connector: Connector): Promise<ConnectionType | undefined> => {
     await connector.activate()
@@ -22,6 +25,9 @@ export default function useConnectToWallet(connectionType: ConnectionType, setOp
       if (!activation) return
 
       window?.localStorage.setItem('ConnectionType', activation)
+      if (! Object.keys(CHAIN_INFO).includes(chainId?.toString())) {
+        switchNetwork(defaultChainId, activation)
+      }
 
       setOpen(false)
       setIsLoading(false)

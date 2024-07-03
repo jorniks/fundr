@@ -2,7 +2,7 @@ import { ChainId } from '@swapsicledex/swapsicle-sdk'
 import RPC from '@/lib/rpc-list'
 
 
-export const defaultChainId = ChainId.TELOS_TESTNET
+export const defaultChainId = ChainId.BSC_TESTNET
 export const INPUT_CHAIN_URL = RPC[ChainId.TELOS_TESTNET][0]
 
 export const CHAIN_TO_URL_MAP = {
@@ -20,16 +20,16 @@ type ChainInfo = {
   rpcUrl: string
 }
 
-export const CHAIN_INFO: { [key: string]: ChainInfo } = {
+export const CHAIN_INFO: { [key: number]: ChainInfo } = {
   [ChainId.BSC_TESTNET]: {
     explorer: "https://testnet.bscscan.com",
-    label: "Binance Smart Chain Testnet",
-    nativeCurrency: { name: "Binance Coin", symbol: "BNB", decimals: 18 },
+    label: "BNB Smart Chain Testnet",
+    nativeCurrency: { name: "Binance Coin", symbol: "tBNB", decimals: 18 },
     rpcUrl: RPC[ChainId.BSC_TESTNET][0],
   },
   [ChainId.MANTLE_TESTNET]: {
-    explorer: "N/A",
-    label: "Mantle Testnet",
+    explorer: "https://explorer.sepolia.mantle.xyz",
+    label: "Mantle Sepolia Testnet",
     nativeCurrency: { name: "Mantle Token", symbol: "MNT", decimals: 18 },
     rpcUrl: RPC[ChainId.MANTLE_TESTNET][0],
   },
