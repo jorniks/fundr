@@ -4,18 +4,18 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch";
 import useTokenRead from "@/hooks/read-hooks/useTokenRead";
 import { useEffect, useState } from "react";
+import useTokenWrite from "@/hooks/write-hooks/useTokenWrite";
+import { Button } from "@/components/button";
+
+
+const burnPercentages = [ 10, 25, 50, 75, 100 ]
 
 
 export default function Home() {
-  const [mintableBalance, setMintableBalance] = useState(0)
-  const [isWalletBlacklisted, setIsWalletBlacklisted] = useState(true)
-  const { tokenSymbol, walletBalance, getMintableBalance, getBlacklistStatus } = useTokenRead()
+  const [inputValue, setInputValue] = useState('')
+  const { tokenSymbol, walletBalance, mintableBalance, blacklistStatus } = useTokenRead()
+  const { mintSpecificAmount, mintMaxAmount, burnToken, toggleWalletBlacklist } = useTokenWrite()
 
-  
-  useEffect(() => {
-    getMintableBalance().then(setMintableBalance)
-    getBlacklistStatus().then(setIsWalletBlacklisted)
-  }, [getBlacklistStatus, getMintableBalance])
   
 
   return (
@@ -33,35 +33,50 @@ export default function Home() {
             <div className=" flex items-center space-x-4 rounded-md border p-4">
               <div className="flex-1 space-y-1">
                 <p className="text-sm font-semibold leading-none">
-                  Blacklist Wallet
+                  {blacklistStatus ? 'Whitelist' : 'Blacklist'} Wallet
                 </p>
                 <p className="text-sm text-gray-600">
-                  Your wallet will not be able to mint/burn LIRIO
+                  Your wallet will {!blacklistStatus && 'not'} be able to mint/burn LIRIO
                 </p>
               </div>
-              <Switch checked={isWalletBlacklisted} />
+              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist()} />
             </div>
 
             <div className="">
-              Minted token balance {walletBalance}
+              Minted balance {(walletBalance || 0)?.toLocaleString()} {tokenSymbol}
             </div>
-
+            
             <div className="space-y-6">
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="font-semibold">
-                    <span className="mr-2 font-normal text-zinc-500">Mintable Bal</span> {mintableBalance?.toLocaleString()} {tokenSymbol}
+                    <span className="mr-2 font-normal text-zinc-500">Mintable Bal</span> {(mintableBalance || 0)?.toLocaleString()} {tokenSymbol}
                   </div>
                   
                   <div className="">
-                    <button className="text-spray-800 hover:underline text-sm">Mint Max</button>
+                    <Button className="text-spray-800 hover:underline text-sm"
+                      onClick={() => mintMaxAmount()}
+                    >Mint Max</Button>
                   </div>
                 </div>
                 
-                <input type="text" placeholder="Amount to mint" className="w-full rounded p-3 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-gray-500 outline-none" />
+                <input
+                  type="text"
+                  placeholder="Amount to mint"
+                  value={inputValue}
+                  className="w-full rounded p-3 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-gray-500 outline-none"
+                  onChange={(e) => {
+                    if (Number(e.target.value) > -1 || e.target.value === '') {
+                      setInputValue(e.target.value)
+                    }
+                  }}
+                />
               </div>
 
-              <button className="btn spray rounded py-3 text-base w-full sm:w-2/5">Mint</button>
+              <Button
+                className="btn spray rounded py-3 text-base w-full sm:w-2/5"
+                onClick={() => mintSpecificAmount(inputValue)}
+              >Mint</Button>
             </div>
 
             <div className="space-y-3 pt-8">
@@ -70,11 +85,13 @@ export default function Home() {
               </div>
 
               <div className="flex items-center justify-between gap-x-2 sm:gap-x-8 font-medium">
-                <div className="ring-1 ring-zinc-500 cursor-pointer hover:chestnut transition-all duration-300 hover:text-white w-1/5 text-center py-2 rounded-sm">10%</div>
-                <div className="ring-1 ring-zinc-500 cursor-pointer hover:chestnut transition-all duration-300 hover:text-white w-1/5 text-center py-2 rounded-sm">25%</div>
-                <div className="ring-1 ring-zinc-500 cursor-pointer hover:chestnut transition-all duration-300 hover:text-white w-1/5 text-center py-2 rounded-sm">50%</div>
-                <div className="ring-1 ring-zinc-500 cursor-pointer hover:chestnut transition-all duration-300 hover:text-white w-1/5 text-center py-2 rounded-sm">75%</div>
-                <div className="ring-1 ring-zinc-500 cursor-pointer hover:chestnut transition-all duration-300 hover:text-white w-1/5 text-center py-2 rounded-sm">100%</div>
+                {burnPercentages.map((burnPercentage, index) => (
+                  <Button
+                    key={index}
+                    className="btn chestnut transition-all duration-300 w-1/5 py-3"
+                    onClick={() => burnToken((burnPercentage / 100))}
+                  >{burnPercentage}%</Button>
+                ))}
               </div>
             </div>
           </TabsContent>
@@ -89,7 +106,7 @@ export default function Home() {
                 <input type="text" placeholder="Amount to mint" className="w-full rounded p-3 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-gray-500 outline-none"/>
               </div>
 
-              <button className="btn spray rounded py-2.5 px-8">Mint</button>
+              <Button className="btn spray rounded py-2.5 px-8">Mint</Button>
             </div>
           </TabsContent>
         </Tabs>
