@@ -16,7 +16,7 @@ import Image from 'next/image';
 import { NETWORK_LABEL } from '@/lib/network-list';
 import { Button } from '@/components/button';
 import Link from 'next/link';
-import { CHAIN_INFO } from '@/lib/services/chain-config';
+import { CHAIN_INFO, defaultChainId } from '@/lib/services/chain-config';
 
 
 const ConnectedWalletButton = () => {
@@ -93,7 +93,7 @@ const ConnectedWalletButton = () => {
               <section className="flex items-center justify-between text-[13px] w-full px-[10px]">
                 <Link
                   href={
-                    `${CHAIN_INFO[String(chainId)]?.explorer
+                    `${CHAIN_INFO[Number(chainId || defaultChainId)]?.explorer
                     }/address/${account}` || ""
                   }
                   target="_blank"

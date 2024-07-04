@@ -25,7 +25,7 @@ export default function useConnectToWallet(connectionType: ConnectionType, setOp
       if (!activation) return
 
       window?.localStorage.setItem('ConnectionType', activation)
-      if (! Object.keys(CHAIN_INFO).includes(chainId?.toString())) {
+      if (! CHAIN_INFO.hasOwnProperty((chainId || defaultChainId)?.toString())) {
         switchNetwork(defaultChainId, activation)
       }
 
