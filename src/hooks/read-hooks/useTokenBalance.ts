@@ -14,7 +14,7 @@ export default function useTokenBalance(tokenAddress: string) {
     async function getTokenSymbol() {
       if (account) {
         const userBalance = await tokenContract?.balanceOf(account)
-        let convertedBalance = convertToDecimalValue(userBalance) || 0
+        let convertedBalance = convertToDecimalValue(userBalance?.toString(), tokenDecimal) || 0
         setUserBalanceOnToken(convertedBalance)
       }
     }
