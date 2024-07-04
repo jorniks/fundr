@@ -35,10 +35,7 @@ export const useStandardEthersContract = (contractAddress: string, contractABI: 
 
 export const useContract = (contractAddress: string, contractABI: any): Contract | StandardEthersContract | null => {
   const web3ReactContract = useWeb3ReactContract(contractAddress, contractABI);
-  const standardEthersContract = useStandardEthersContract(
-    contractAddress,
-    contractABI
-  );
+  const standardEthersContract = useStandardEthersContract(contractAddress, contractABI);
 
   if (web3ReactContract) {
     return web3ReactContract;
