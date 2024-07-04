@@ -29,13 +29,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isLoading}
       >
         {isLoading ? (
-          <ClipLoader
-            color="#fff"
-            loading={isLoading}
-            size={20}
-            aria-label="Loading Spinner"
-            className=""
-          />
+          <div className="flex items-center gap-x-2">
+            {children}
+
+            <ClipLoader
+              color="#fff"
+              loading={isLoading}
+              size={20}
+              aria-label="Loading Spinner"
+              className=""
+            />
+          </div>
         ) : (
           children
         )}

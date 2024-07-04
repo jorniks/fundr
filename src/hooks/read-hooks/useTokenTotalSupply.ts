@@ -10,9 +10,13 @@ export default function useTokenTotalSupply(tokenAddress: string) {
 
   useEffect(() => {
     async function getTokenSymbol() {
-      const totalSupply = await tokenContract?.totalSupply()
-      const convertedSupply = convertToDecimalValue(totalSupply?.toString(), tokenDecimal) || 0
-      setTokenTotalSupply(convertedSupply)
+      try {
+        const totalSupply = await tokenContract?.totalSupply()
+        const convertedSupply = convertToDecimalValue(totalSupply?.toString(), tokenDecimal) || 0
+        setTokenTotalSupply(convertedSupply)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     getTokenSymbol()

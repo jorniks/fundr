@@ -13,9 +13,13 @@ export default function useTokenBalance(tokenAddress: string) {
   useEffect(() => {
     async function getTokenSymbol() {
       if (account) {
-        const userBalance = await tokenContract?.balanceOf(account)
-        let convertedBalance = convertToDecimalValue(userBalance?.toString(), tokenDecimal) || 0
-        setUserBalanceOnToken(convertedBalance)
+        try {
+          const userBalance = await tokenContract?.balanceOf(account)
+          let convertedBalance = convertToDecimalValue(userBalance?.toString(), tokenDecimal) || 0
+          setUserBalanceOnToken(convertedBalance)
+        } catch (error) {
+          
+        }
       }
     }
 

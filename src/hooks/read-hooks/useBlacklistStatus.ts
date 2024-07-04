@@ -7,8 +7,11 @@ export default function useBlacklistStatus(tokenAddress: string) {
 
   useEffect(() => {
     async function getBlacklistStatus() {
-      const blacklistStatus = await contract?.isWalletBlacklisted()
-      setIsWalletBlacklisted(blacklistStatus)
+      try {
+        const blacklistStatus = await contract?.isWalletBlacklisted()
+        setIsWalletBlacklisted(blacklistStatus)
+      } catch (error) {
+      }
     }
 
     getBlacklistStatus()

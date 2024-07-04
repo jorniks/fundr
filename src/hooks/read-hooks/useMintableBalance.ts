@@ -10,10 +10,14 @@ export default function useMintableBalance(tokenAddress: string) {
 
   useEffect(() => {
     async function getMintableBalance() {
-      const mintableBalance = await contract?.mintableBalance()
-      const convertedMintableBalance = convertToDecimalValue(mintableBalance?.toString(), tokenDecimal)
+      try {
+        const mintableBalance = await contract?.mintableBalance()
+        const convertedMintableBalance = convertToDecimalValue(mintableBalance?.toString(), tokenDecimal)
 
-      setMintableBalance(convertedMintableBalance)
+        setMintableBalance(convertedMintableBalance)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     getMintableBalance()

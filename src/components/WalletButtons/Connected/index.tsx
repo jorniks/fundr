@@ -39,7 +39,7 @@ const ConnectedWalletButton = () => {
 
 
   return (
-    <div className="">
+    (account && chainId && Object.keys(CHAIN_INFO).includes(chainId?.toString())) &&
       <Dialog>
         <DialogTrigger asChild>
           <button className="btn spray px-5 py-3">{account ? shortenAddress(account) : "Not Connected"}</button>
@@ -83,7 +83,7 @@ const ConnectedWalletButton = () => {
 
                 {/* Button to disconnect */}
                 <Button
-                  className="btn chestnut py-2 px-3"
+                  className="btn chestnut py-3 px-4"
                   onClick={disconnectWallet}
                 >
                   Disconnect
@@ -157,7 +157,6 @@ const ConnectedWalletButton = () => {
           </div>
         </DialogContent>
       </Dialog>
-    </div>
   )
 }
 

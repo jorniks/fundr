@@ -7,8 +7,12 @@ export default function useTokenDecimal(tokenAddress: string) {
 
   useEffect(() => {
     const getTokenDecimal = async () => {
-      const tokenDecimal = await tokenContract?.decimals()
-      setTokenDecimal(tokenDecimal?.toString())
+      try {
+        const tokenDecimal = await tokenContract?.decimals()
+        setTokenDecimal(tokenDecimal?.toString())
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     getTokenDecimal()

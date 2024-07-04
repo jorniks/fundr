@@ -62,9 +62,15 @@ export default function useTokenWrite() {
         setIsLoading(false)
         return
       }
+
+      if (blacklistStatus) {
+        toast({ variant: "info", description: "Wallet is blacklisted!" })
+        setIsLoading(false)
+        return
+      }
       
       if (!amountToMint) {
-        toast({ variant: "error", description: "No mint amount entered!" })
+        toast({ variant: "info", description: "No mint amount entered!" })
         setIsLoading(false)
         return
       }
@@ -86,7 +92,7 @@ export default function useTokenWrite() {
         setIsLoading(false)
       }
     },
-    [account, contract, explorerURL, setIsLoading, tokenDecimal],
+    [account, blacklistStatus, contract, explorerURL, setIsLoading, tokenDecimal],
   )
 
   const mintMaxAmount = useCallback(
@@ -95,6 +101,12 @@ export default function useTokenWrite() {
 
       if (!account) {
         toast({ variant: "error", description: "No connected wallet!" })
+        setIsLoading(false)
+        return
+      }
+
+      if (blacklistStatus) {
+        toast({ variant: "info", description: "Wallet is blacklisted!" })
         setIsLoading(false)
         return
       }
@@ -114,7 +126,7 @@ export default function useTokenWrite() {
         setIsLoading(false)
       }
     },
-    [account, contract, explorerURL, setIsLoading],
+    [account, blacklistStatus, contract, explorerURL, setIsLoading],
   )
 
   const burnToken = useCallback(
@@ -123,6 +135,12 @@ export default function useTokenWrite() {
       
       if (!account) {
         toast({ variant: "error", description: "No connected wallet!" })
+        setIsLoading(false)
+        return
+      }
+
+      if (blacklistStatus) {
+        toast({ variant: "info", description: "Wallet is blacklisted!" })
         setIsLoading(false)
         return
       }

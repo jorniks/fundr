@@ -10,14 +10,8 @@ import { useMemo } from 'react';
 export const useWeb3ReactContract = (contractAddress: string, contractABI: any): Contract | null => {
   const { account, provider } = useWeb3React();
   const contract = useMemo(() => {
-    if (
-      !contractAddress ||
-      contractAddress === ZeroAddress ||
-      !contractABI ||
-      !provider
-    ) {
-      return null;
-    }
+    if (!contractAddress || contractAddress === ZeroAddress || !contractABI || !provider) return null;
+
     return getContract(contractAddress, contractABI, provider, account);
   }, [contractAddress, contractABI, provider, account]);
 
@@ -27,8 +21,7 @@ export const useWeb3ReactContract = (contractAddress: string, contractABI: any):
 // USES STANDARD ETHERS PROVIDER FOR WHEN web3-react DOESN'T HAVE A PROVIDER TO RELY ON
 // USED ONLY WHEN window.ethereum IS UNDEFINED
 export const useStandardEthersContract = (contractAddress: string, contractABI: any): StandardEthersContract | null => {
-  if (!contractAddress || contractAddress === ZeroAddress || !contractABI)
-    return null;
+  if (!contractAddress || contractAddress === ZeroAddress || !contractABI) return null;
 
   return GetContract(contractAddress, contractABI);
 };

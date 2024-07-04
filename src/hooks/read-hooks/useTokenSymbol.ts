@@ -7,8 +7,12 @@ export default function useTokenSymbol(tokenAddress: string) {
 
   useEffect(() => {
     async function getTokenSymbol() {
-      const tokenSymbol = await tokenContract?.symbol()
-      setTokenSymbol(tokenSymbol)
+      try {
+        const tokenSymbol = await tokenContract?.symbol()
+        setTokenSymbol(tokenSymbol)
+      } catch (error) {
+        console.log(error)
+      }
     }
 
     getTokenSymbol()
