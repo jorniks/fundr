@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import RecoilContextProvider from "@/providers/recoilContextProvider";
 import Web3ContextProvider from "@/providers/web3ReactProvider";
+import { Toaster } from "@/components/ui/toaster";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,6 +26,7 @@ export default function RootLayout({
         <RecoilContextProvider>
           <Web3ContextProvider>
             {children}
+            <Toaster />
           </Web3ContextProvider>
         </RecoilContextProvider>
       </body>
