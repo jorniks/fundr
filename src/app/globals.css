@@ -33,7 +33,7 @@
   }
 
   .spray-dark {
-    @apply hover:bg-spray-600 bg-spray-900 text-white
+    @apply hover:bg-spray-700 bg-spray-900 text-white
   }
 
   .chestnut {
