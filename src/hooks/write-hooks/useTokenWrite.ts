@@ -12,22 +12,24 @@ import { formatToBigInt } from "@/functions/format";
 import { toast } from "@/components/ui/use-toast";
 import useBlacklistStatus from "../read-hooks/useBlacklistStatus";
 import { errorCode } from "@/lib/metamask-error-codes";
+import useTokenRead from "../read-hooks/useTokenRead";
 
 export default function useTokenWrite() {
   const { account, chainId } = useWeb3React();
-  const tokenAddress = LIRIO_TOKEN[chainId || defaultChainId]
-  const blacklistStatus = useBlacklistStatus(tokenAddress)
+  const tokenAddress = (chainId && CHAIN_INFO.hasOwnProperty(chainId?.toString())) ? LIRIO_TOKEN[chainId] : LIRIO_TOKEN[defaultChainId]
+  const { getBlacklistStatus } = useTokenRead()
   const contract = useLirioContract(tokenAddress)
   const walletBalance = useTokenBalance(tokenAddress);
   const tokenSymbol = useTokenSymbol(tokenAddress) || "LIR"
   const tokenDecimal = useTokenDecimal(tokenAddress)
   const setIsLoading = useSetRecoilState(loadingState)
-  const explorerURL = CHAIN_INFO[Number(chainId || defaultChainId) as keyof typeof CHAIN_INFO].explorer
+  const explorerURL = (chainId && CHAIN_INFO.hasOwnProperty(chainId?.toString())) ? CHAIN_INFO[chainId].explorer : CHAIN_INFO[defaultChainId].explorer
 
   
   const toggleWalletBlacklist = useCallback(
     async () => {
       setIsLoading(true)
+      const blacklistStatus = await getBlacklistStatus()
 
       if (!account) {
         toast({ variant: "error", description: "No connected wallet!" })
@@ -50,12 +52,13 @@ export default function useTokenWrite() {
         setIsLoading(false)
       }
     },
-    [setIsLoading, account, contract, blacklistStatus, explorerURL],
+    [setIsLoading, getBlacklistStatus, account, contract, explorerURL],
   )
 
   const mintSpecificAmount = useCallback(
     async (amountToMint: string) => {
       setIsLoading(true)
+      const blacklistStatus = await getBlacklistStatus()
 
       if (!account) {
         toast({ variant: "error", description: "No connected wallet!" })
@@ -92,12 +95,13 @@ export default function useTokenWrite() {
         setIsLoading(false)
       }
     },
-    [account, blacklistStatus, contract, explorerURL, setIsLoading, tokenDecimal],
+    [account, contract, explorerURL, getBlacklistStatus, setIsLoading, tokenDecimal],
   )
 
   const mintMaxAmount = useCallback(
     async () => {
       setIsLoading(true)
+      const blacklistStatus = await getBlacklistStatus()
 
       if (!account) {
         toast({ variant: "error", description: "No connected wallet!" })
@@ -126,12 +130,13 @@ export default function useTokenWrite() {
         setIsLoading(false)
       }
     },
-    [account, blacklistStatus, contract, explorerURL, setIsLoading],
+    [account, contract, explorerURL, getBlacklistStatus, setIsLoading],
   )
 
   const burnToken = useCallback(
     async (percentageToBurn: number) => {
       setIsLoading(true)
+      const blacklistStatus = await getBlacklistStatus()
       
       if (!account) {
         toast({ variant: "error", description: "No connected wallet!" })
@@ -163,7 +168,7 @@ export default function useTokenWrite() {
         setIsLoading(false)
       }
     },
-    [account, contract, explorerURL, setIsLoading, tokenDecimal, tokenSymbol, walletBalance],
+    [account, contract, explorerURL, getBlacklistStatus, setIsLoading, tokenDecimal, tokenSymbol, walletBalance],
   )
 
   return { toggleWalletBlacklist, mintSpecificAmount, mintMaxAmount, burnToken }
