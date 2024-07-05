@@ -6,23 +6,28 @@ import useTokenRead from "@/hooks/read-hooks/useTokenRead";
 import { useCallback, useEffect, useState } from "react";
 import useTokenWrite from "@/hooks/write-hooks/useTokenWrite";
 import { Button } from "@/components/button";
+import { useWeb3React } from "@web3-react/core";
+import WalletButton from "@/components/WalletButtons";
 
 
 const burnPercentages = [ 10, 25, 50, 75, 100 ]
 
 
 export default function Home() {
+  const { account } = useWeb3React()
   const [blacklistStatus, setBlacklistStatus] = useState<boolean>(false)
   const [mintableBalance, setMintableBalance] = useState<number | undefined>(0)
+  const [walletBalance, setWalletBalance] = useState<number | undefined>(0)
   const [inputValue, setInputValue] = useState<string>('')
-  const { tokenSymbol, walletBalance, getMintableBalance, getBlacklistStatus } = useTokenRead()
+  const { tokenSymbol, getMintableBalance, getBlacklistStatus, getWalletBalance } = useTokenRead()
   const { mintSpecificAmount, mintMaxAmount, burnToken, toggleWalletBlacklist } = useTokenWrite()
 
   const loadContractInfo = useCallback(
     () => {
       getMintableBalance().then(setMintableBalance)
       getBlacklistStatus().then(setBlacklistStatus)
-    }, [getBlacklistStatus, getMintableBalance],
+      getWalletBalance().then(setWalletBalance)
+    }, [getBlacklistStatus, getMintableBalance, getWalletBalance],
   )
 
   useEffect(() => {
@@ -51,7 +56,7 @@ export default function Home() {
                   Your wallet will {!blacklistStatus && 'not'} be able to mint/burn LIRIO
                 </p>
               </div>
-              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist().then(loadContractInfo)} />
+              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist().then(() => loadContractInfo())} className={`${!account && 'pointer-events-none opacity-60'}`} />
             </div>
 
             <div className="">
@@ -66,8 +71,8 @@ export default function Home() {
                   </div>
                   
                   <div className="">
-                    <Button className="text-spray-300 underline-offset-2 hover:underline text-sm"
-                      onClick={() => mintMaxAmount().then(loadContractInfo)}
+                    <Button className={`text-spray-300 underline-offset-2 hover:underline text-sm ${!account && 'pointer-events-none opacity-60'}`}
+                      onClick={() => mintMaxAmount().then(() => loadContractInfo())}
                     >Mint Max</Button>
                   </div>
                 </div>
@@ -85,10 +90,17 @@ export default function Home() {
                 />
               </div>
 
-              <Button
-                className="btn spray rounded py-3 text-base w-full sm:w-2/5"
-                onClick={() => mintSpecificAmount(inputValue).then(loadContractInfo)}
-              >Mint</Button>
+              {!account ?
+                <WalletButton />
+              :
+                <Button
+                  className="btn spray rounded py-3 text-base w-full sm:w-2/5"
+                  onClick={() => mintSpecificAmount(inputValue).then(() => {
+                    setInputValue('')
+                    loadContractInfo()
+                  })}
+                >Mint</Button>
+              }
             </div>
 
             <div className="space-y-3 pt-8">
@@ -100,8 +112,8 @@ export default function Home() {
                 {burnPercentages.map((burnPercentage, index) => (
                   <Button
                     key={index}
-                    className="btn chestnut transition-all duration-300 w-1/5 py-3"
-                    onClick={() => burnToken((burnPercentage / 100)).then(loadContractInfo)}
+                    className={`btn chestnut transition-all duration-300 w-1/5 py-3 ${!account && 'pointer-events-none opacity-80'}`}
+                    onClick={() => burnToken((burnPercentage / 100)).then(() => loadContractInfo())}
                   >{burnPercentage}%</Button>
                 ))}
               </div>
@@ -109,11 +121,11 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent className="container overflow-y-auto no-scrollbar bg-white/20 backdrop-blur-lg w-full max-w-xl shadow rounded py-10 space-y-6" value="transfer">
-            <div className="">
-              Transfer token here.
+            <div className="font-semibold text-xl">
+              COMING SOON
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 hidden">
               <div className="">
                 <input type="text" placeholder="Amount to mint" className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"/>
               </div>

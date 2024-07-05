@@ -16,7 +16,6 @@ import { NETWORK_LABEL } from '@/lib/network-list';
 import { Button } from '@/components/button';
 import Link from 'next/link';
 import { CHAIN_INFO, defaultChainId } from '@/lib/services/chain-config';
-import { switchNetwork } from '@/lib/wallet/connector';
 
 
 const ConnectedWalletButton = () => {
@@ -36,12 +35,6 @@ const ConnectedWalletButton = () => {
       setTimeout(() => setAddressCopied(false), 1000);
     }
   };
-
-  useEffect(() => {
-    if (chainId && !CHAIN_INFO.hasOwnProperty(chainId)) {
-      switchNetwork(defaultChainId)
-    }
-  }, [chainId, connectionType])
   
 
 
