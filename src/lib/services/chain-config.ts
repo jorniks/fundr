@@ -3,11 +3,6 @@ import RPC from '@/lib/rpc-list'
 
 
 export const defaultChainId = ChainId.BSC_TESTNET
-export const INPUT_CHAIN_URL = RPC[ChainId.TELOS_TESTNET][0]
-
-export const CHAIN_TO_URL_MAP = {
-  [ChainId.TELOS]: RPC[ChainId.TELOS_TESTNET][0],
-}
 
 type ChainInfo = {
   explorer: string
@@ -25,25 +20,13 @@ export const CHAIN_INFO: { [key: number]: ChainInfo } = {
     explorer: "https://testnet.bscscan.com",
     label: "BNB Smart Chain Testnet",
     nativeCurrency: { name: "Binance Coin", symbol: "tBNB", decimals: 18 },
-    rpcUrl: RPC[ChainId.BSC_TESTNET][0],
-  },
-  [ChainId.MANTLE_TESTNET]: {
-    explorer: "https://explorer.sepolia.mantle.xyz",
-    label: "Mantle Sepolia Testnet",
-    nativeCurrency: { name: "Mantle Token", symbol: "MNT", decimals: 18 },
-    rpcUrl: RPC[ChainId.MANTLE_TESTNET][0],
-  },
-  [ChainId.MATIC_TESTNET]: {
-    explorer: "https://mumbai.polygonscan.com",
-    label: "Polygon Testnet",
-    nativeCurrency: { name: "MATIC", symbol: "MATIC", decimals: 18 },
-    rpcUrl: RPC[ChainId.MATIC_TESTNET][0],
+    rpcUrl: RPC[ChainId.BSC_TESTNET],
   },
   [ChainId.TELOS_TESTNET]: {
     explorer: "https://testnet.teloscan.io",
     label: "Telos Testnet",
     nativeCurrency: { name: "Telos", symbol: "TLOS", decimals: 18 },
-    rpcUrl: RPC[ChainId.TELOS_TESTNET][0],
+    rpcUrl: RPC[ChainId.TELOS_TESTNET],
   },
 }
 

@@ -10,16 +10,14 @@ function useGetActiveProviderURL() {
   }, []);
 
   const helper = async () => {
-    for (const rpcURL of RPC[defaultChainId]) {
-      let provider = new ethers.JsonRpcProvider(rpcURL, undefined, {
-        staticNetwork: ethers.Network.from(defaultChainId),
-      });
-      try {
-        await provider._detectNetwork();
-        setActiveUrl(rpcURL);
-        break;
-      } catch (err) {
-      }
+    let provider = new ethers.JsonRpcProvider(RPC[defaultChainId], undefined, {
+      staticNetwork: ethers.Network.from(defaultChainId),
+    });
+    
+    try {
+      await provider._detectNetwork();
+      setActiveUrl(RPC[defaultChainId]);
+    } catch (err) {
     }
   };
 

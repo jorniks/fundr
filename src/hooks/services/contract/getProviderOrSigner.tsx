@@ -13,20 +13,12 @@ function useGetProviderOrSigner() {
   }, [activeUrl]);
   const getProvider = async () => {
     if (activeUrl) {
-      if (window.ethereum && window.ethereum.networkVersion === defaultChainId) {
-        try {
-          const tempProvider = new ethers.BrowserProvider(window.ethereum);
-          setProvider(tempProvider);
-        } catch (error) {
-        }
-      } else {
-        let tempProvider = activeUrl.startsWith("http")
-          ? new ethers.JsonRpcProvider(activeUrl, undefined, {
-              staticNetwork: ethers.Network.from(40),
-            })
-          : ethers.getDefaultProvider(activeUrl);
-        setProvider(tempProvider);
-      }
+      let tempProvider = activeUrl.startsWith("http")
+        ? new ethers.JsonRpcProvider(activeUrl, undefined, {
+          staticNetwork: ethers.Network.from(defaultChainId),
+        })
+        : ethers.getDefaultProvider(activeUrl);
+      setProvider(tempProvider);
     }
   };
   return provider;

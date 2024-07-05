@@ -2,9 +2,10 @@ import { Web3ReactHooks, initializeConnector } from '@web3-react/core'
 import { Connector } from '@web3-react/types'
 import { MetaMask } from '@web3-react/metamask'
 import { Network } from '@web3-react/network'
-import { CHAIN_TO_URL_MAP, defaultChainId } from '@/lib/services/chain-config'
+import { defaultChainId } from '@/lib/services/chain-config'
 import { WalletConnect } from "@web3-react/walletconnect-v2";
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
+import RPC from '../rpc-list'
 
 export interface Connection {
   connector: Connector
@@ -43,7 +44,7 @@ const buildWalletConnectConnector = () => {
           actions,
           options: {
             projectId: process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "",
-            rpcMap: CHAIN_TO_URL_MAP,
+            rpcMap: {[defaultChainId]: RPC[defaultChainId]},
             chains: [defaultChainId],
             showQrModal: true,
             metadata: {
@@ -83,7 +84,7 @@ const buildNetworkConnector = () => {
     (actions) =>
       new Network({
         actions,
-        urlMap: CHAIN_TO_URL_MAP,
+        urlMap: {[defaultChainId]: RPC[defaultChainId]},
         defaultChainId: defaultChainId,
       })
   )
