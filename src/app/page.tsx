@@ -3,7 +3,7 @@ import NavBar from "@/components/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Switch } from "@/components/ui/switch";
 import useTokenRead from "@/hooks/read-hooks/useTokenRead";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import useTokenWrite from "@/hooks/write-hooks/useTokenWrite";
 import { Button } from "@/components/button";
 
@@ -12,10 +12,22 @@ const burnPercentages = [ 10, 25, 50, 75, 100 ]
 
 
 export default function Home() {
-  const [inputValue, setInputValue] = useState('')
-  const { tokenSymbol, walletBalance, mintableBalance, blacklistStatus } = useTokenRead()
+  const [blacklistStatus, setBlacklistStatus] = useState<boolean>(false)
+  const [mintableBalance, setMintableBalance] = useState<number | undefined>(0)
+  const [inputValue, setInputValue] = useState<string>('')
+  const { tokenSymbol, walletBalance, getMintableBalance, getBlacklistStatus } = useTokenRead()
   const { mintSpecificAmount, mintMaxAmount, burnToken, toggleWalletBlacklist } = useTokenWrite()
 
+  const loadContractInfo = useCallback(
+    () => {
+      getMintableBalance().then(setMintableBalance)
+      getBlacklistStatus().then(setBlacklistStatus)
+    }, [getBlacklistStatus, getMintableBalance],
+  )
+
+  useEffect(() => {
+    loadContractInfo()
+  }, [loadContractInfo])
   
 
   return (
@@ -39,7 +51,7 @@ export default function Home() {
                   Your wallet will {!blacklistStatus && 'not'} be able to mint/burn LIRIO
                 </p>
               </div>
-              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist()} />
+              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist().then(loadContractInfo)} />
             </div>
 
             <div className="">
@@ -55,7 +67,7 @@ export default function Home() {
                   
                   <div className="">
                     <Button className="text-spray-300 underline-offset-2 hover:underline text-sm"
-                      onClick={() => mintMaxAmount()}
+                      onClick={() => mintMaxAmount().then(loadContractInfo)}
                     >Mint Max</Button>
                   </div>
                 </div>
@@ -75,7 +87,7 @@ export default function Home() {
 
               <Button
                 className="btn spray rounded py-3 text-base w-full sm:w-2/5"
-                onClick={() => mintSpecificAmount(inputValue)}
+                onClick={() => mintSpecificAmount(inputValue).then(loadContractInfo)}
               >Mint</Button>
             </div>
 
@@ -89,7 +101,7 @@ export default function Home() {
                   <Button
                     key={index}
                     className="btn chestnut transition-all duration-300 w-1/5 py-3"
-                    onClick={() => burnToken((burnPercentage / 100))}
+                    onClick={() => burnToken((burnPercentage / 100)).then(loadContractInfo)}
                   >{burnPercentage}%</Button>
                 ))}
               </div>

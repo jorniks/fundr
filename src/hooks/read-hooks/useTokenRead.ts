@@ -1,23 +1,57 @@
 import { useWeb3React } from "@web3-react/core"
+import { useLirioContract } from "../services/useContract";
 import { LIRIO_TOKEN } from "@/constants/addresses/lirio-token";
-import { defaultChainId } from "@/lib/services/chain-config";
-import useTokenBalance from "./useTokenBalance";
+import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
 import useTokenSymbol from "./useTokenSymbol";
 import useTokenDecimal from "./useTokenDecimal";
 import useTokenTotalSupply from "./useTokenTotalSupply";
-import useBlacklistStatus from "./useBlacklistStatus";
-import useMintableBalance from "./useMintableBalance";
+import { useCallback } from "react";
+import { convertToDecimalValue } from "@/functions/misc-functions";
 
 
 export default function useTokenRead() {
-  const { chainId } = useWeb3React();
-  const tokenAddress = LIRIO_TOKEN[chainId || defaultChainId]
-  const walletBalance = useTokenBalance(tokenAddress);
+  const { account, chainId } = useWeb3React();
+  const tokenAddress = (chainId && CHAIN_INFO.hasOwnProperty(chainId?.toString())) ? LIRIO_TOKEN[chainId] : LIRIO_TOKEN[defaultChainId]
+  const contract = useLirioContract(tokenAddress)
   const tokenSymbol = useTokenSymbol(tokenAddress) || "LIR"
   const tokenDecimal = useTokenDecimal(tokenAddress)
   const tokenTotalSupply = useTokenTotalSupply(tokenAddress)
-  const blacklistStatus = useBlacklistStatus(tokenAddress)
-  const mintableBalance = useMintableBalance(tokenAddress)
+
+
+  const getMintableBalance = useCallback(
+    async () => {
+      try {
+        const mintableBalance = await contract?.mintableBalance()
+        const convertedMintableBalance = convertToDecimalValue(mintableBalance?.toString(), tokenDecimal)
+
+        return convertedMintableBalance || 0;
+      } catch (error) {
+        console.log(error)
+      }
+    }, [contract, tokenDecimal]
+  )
+
+  const getBlacklistStatus = useCallback(
+    async () => {
+      try {
+        const blacklistStatus = await contract?.isWalletBlacklisted()
+        return blacklistStatus;
+      } catch (error) {
+      }
+    }, [contract]
+  )
+
+  const getWalletBalance = useCallback(
+    async () => {
+      try {
+        const userBalance = await contract?.balanceOf(account)
+        let convertedBalance = convertToDecimalValue(userBalance?.toString(), tokenDecimal) || 0
+
+        return convertedBalance || 0;
+      } catch (error) {
+      }
+    }, [account, contract, tokenDecimal]
+  )
   
-  return { walletBalance, tokenSymbol, tokenDecimal, tokenTotalSupply, mintableBalance, blacklistStatus }
+  return { tokenSymbol, tokenDecimal, tokenTotalSupply, getMintableBalance, getBlacklistStatus, getWalletBalance }
 }
