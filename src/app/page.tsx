@@ -19,23 +19,23 @@ export default function Home() {
   
 
   return (
-    <main className="flex flex-col h-screen overflow-hidden bg-gray-100">
+    <main className="flex flex-col h-screen overflow-hidden bg-gradient-bg text-white">
       <NavBar />
 
       <div className="py-8 space-y-4 px-4 sm:px-8">
         <Tabs defaultValue="mint" className="w-full max-w-xl mx-auto space-y-4">
-          <TabsList className="grid grid-cols-12 shadow rounded-md divide-x bg-white overflow-hidden">
+          <TabsList className="grid grid-cols-12 shadow rounded-md divide-x bg-white/20 backdrop-blur-lg overflow-hidden">
             <TabsTrigger className="col-span-6" value="mint">Mint</TabsTrigger>
             <TabsTrigger className="col-span-6" value="transfer">Transfer</TabsTrigger>
           </TabsList>
 
-          <TabsContent className="container overflow-y-auto no-scrollbar bg-white w-full max-w-xl shadow rounded py-10 space-y-6" value="mint">
+          <TabsContent className="container overflow-y-auto no-scrollbar bg-white/20 backdrop-blur-lg shadow-lg w-full max-w-xl rounded py-10 space-y-6" value="mint">
             <div className=" flex items-center space-x-4 rounded-md border p-4">
               <div className="flex-1 space-y-1">
                 <p className="text-sm font-semibold leading-none">
                   {blacklistStatus ? 'Whitelist' : 'Blacklist'} Wallet
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="text-sm">
                   Your wallet will {!blacklistStatus && 'not'} be able to mint/burn LIRIO
                 </p>
               </div>
@@ -50,11 +50,11 @@ export default function Home() {
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <div className="font-semibold">
-                    <span className="mr-2 font-normal text-zinc-500">Mintable Bal</span> {(mintableBalance || 0)?.toLocaleString()} {tokenSymbol}
+                    <span className="mr-2 font-normal">Mintable Bal</span> {(mintableBalance || 0)?.toLocaleString()} {tokenSymbol}
                   </div>
                   
                   <div className="">
-                    <Button className="text-spray-800 hover:underline text-sm"
+                    <Button className="text-spray-300 underline-offset-2 hover:underline text-sm"
                       onClick={() => mintMaxAmount()}
                     >Mint Max</Button>
                   </div>
@@ -64,7 +64,7 @@ export default function Home() {
                   type="text"
                   placeholder="Amount to mint"
                   value={inputValue}
-                  className="w-full rounded p-3 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-gray-500 outline-none"
+                  className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"
                   onChange={(e) => {
                     if (Number(e.target.value) > -1 || e.target.value === '') {
                       setInputValue(e.target.value)
@@ -96,17 +96,17 @@ export default function Home() {
             </div>
           </TabsContent>
 
-          <TabsContent className="container overflow-y-auto no-scrollbar bg-white w-full max-w-xl shadow rounded py-10 space-y-6" value="transfer">
+          <TabsContent className="container overflow-y-auto no-scrollbar bg-white/20 backdrop-blur-lg w-full max-w-xl shadow rounded py-10 space-y-6" value="transfer">
             <div className="">
               Transfer token here.
             </div>
 
             <div className="space-y-6">
               <div className="">
-                <input type="text" placeholder="Amount to mint" className="w-full rounded p-3 text-gray-900 shadow-sm ring-1 ring-gray-300 focus:ring-gray-500 outline-none"/>
+                <input type="text" placeholder="Amount to mint" className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"/>
               </div>
 
-              <Button className="btn spray rounded py-2.5 px-8">Mint</Button>
+              <Button className="btn spray rounded py-3 text-base w-full sm:w-2/5">Transfer</Button>
             </div>
           </TabsContent>
         </Tabs>

@@ -29,14 +29,14 @@
   }
 
   .spray {
-    @apply hover:bg-spray-800 bg-spray-700 text-white
+    @apply hover:bg-spray-600 bg-spray-700 text-white
   }
 
   .spray-dark {
-    @apply hover:bg-spray-800 bg-spray-900 text-white
+    @apply hover:bg-spray-600 bg-spray-900 text-white
   }
 
   .chestnut {
-    @apply hover:bg-chestnut-800 bg-chestnut-700 text-white
+    @apply hover:bg-chestnut-600 bg-chestnut-700 text-white
   }
 }
