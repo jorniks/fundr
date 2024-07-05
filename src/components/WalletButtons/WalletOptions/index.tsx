@@ -8,28 +8,25 @@ interface OptionsParam {
   walletName: string
   iconName: string
   connectionType: ConnectionType
-  isEnabled: boolean
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const WalletOption: FC<OptionsParam> = ({ walletName, iconName, connectionType, isEnabled, setOpen }) => {
+const WalletOption: FC<OptionsParam> = ({ walletName, iconName, connectionType, setOpen }) => {
   const connectWallet = useConnectToWallet(connectionType, setOpen)
 
   return (
-    <Button className="btn spray-dark w-full flex justify-start items-center gap-x-2 py-2"
+    <Button className="col-span-4 btn spray-dark py-2 flex flex-col gap-y-3"
       onClick={connectWallet}
     >
-      <div className="px-2">
-        <Image
-          src={`/img/${iconName}`}
-          height={50}
-          width={50}
-          alt={`${walletName} logo`}
-          className=""
-        />
-      </div>
+      <Image
+        src={`/img/${iconName}`}
+        height={50}
+        width={50}
+        alt={`${walletName} logo`}
+        className=""
+      />
 
-      <div className="text-base"> {walletName} </div>
+      <div className="text-xs"> {walletName} </div>
     </Button>
   )
 }

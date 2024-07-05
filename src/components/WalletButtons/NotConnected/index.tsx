@@ -55,9 +55,6 @@ const NotConnectedWalletButton = () => {
             walletName={SUPPORTED_WALLETS[wallet].name}
             iconName={SUPPORTED_WALLETS[wallet].iconName}
             connectionType={ConnectionType[wallet]}
-            isEnabled={
-              isNoOptionActive || connectionType === ConnectionType[wallet]
-            }
             setOpen={setOpen}
           />
         );
@@ -65,7 +62,7 @@ const NotConnectedWalletButton = () => {
 
       return null;
     });
-  }, [connectionType, isNoOptionActive]);
+  }, []);
 
 
   return (
@@ -81,7 +78,7 @@ const NotConnectedWalletButton = () => {
             <DialogDescription>Click any of the below icons to connect your wallet to the app.</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">{walletOptions}</div>
+          <div className="grid grid-cols-12 gap-4 py-4">{walletOptions}</div>
         </DialogContent>
       </Dialog>
     </div>
