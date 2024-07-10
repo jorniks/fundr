@@ -11,6 +11,7 @@ import WalletButton from "@/components/WalletButtons";
 import { CHAIN_INFO } from "@/lib/services/chain-config";
 import { useRecoilValue } from "recoil";
 import { blacklistStatusState, tokenBalanceState, tokenTotalSupplyState } from "./state/atoms/atom";
+import { useTokenTransfer } from "@/hooks/write-hooks/useTokenTransfer";
 
 
 const burnPercentages = [ 10, 25, 50, 75, 100 ]
@@ -20,9 +21,14 @@ export default function Home() {
   const { account, chainId } = useWeb3React()
   const incorrectNetwork = (chainId && CHAIN_INFO.hasOwnProperty(chainId?.toString())) ? true : false
   const [mintableBalance, setMintableBalance] = useState<number | undefined>(0)
-  const [inputValue, setInputValue] = useState<string>('')
+  const [inputValue, setInputValue] = useState({
+    mintAmount: '',
+    recipientAddress: '',
+    transferAmount: '',
+  })
   const { tokenSymbol, getMintableBalance, getBlacklistStatus, getWalletBalance, getTokenTotalSupply } = useTokenRead()
   const { mintSpecificAmount, mintMaxAmount, burnToken, toggleWalletBlacklist } = useTokenWrite()
+  const transferToken = useTokenTransfer()
   const walletBalance = useRecoilValue(tokenBalanceState)
   const blacklistStatus = useRecoilValue(blacklistStatusState)
   const tokenTotalSupply = useRecoilValue(tokenTotalSupplyState)
@@ -33,6 +39,11 @@ export default function Home() {
       getBlacklistStatus()
       getWalletBalance()
       getTokenTotalSupply()
+      setInputValue({
+        mintAmount: '',
+        recipientAddress: '',
+        transferAmount: '',
+      })
     }, [getBlacklistStatus, getMintableBalance, getTokenTotalSupply, getWalletBalance],
   )
 
@@ -86,11 +97,11 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="Amount to mint"
-                  value={inputValue}
+                  value={inputValue.mintAmount}
                   className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"
                   onChange={(e) => {
                     if (Number(e.target.value) > -1 || e.target.value === '') {
-                      setInputValue(e.target.value)
+                      setInputValue(prevState => ({...prevState, mintAmount: e.target.value}))
                     }
                   }}
                 />
@@ -101,10 +112,7 @@ export default function Home() {
               :
                 <Button
                   className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
-                  onClick={() => mintSpecificAmount(inputValue).then(() => {
-                    setInputValue('')
-                    loadContractInfo()
-                  })}
+                  onClick={() => mintSpecificAmount(inputValue.mintAmount).then(() => loadContractInfo())}
                 >Mint</Button>
               }
             </div>
@@ -137,11 +145,9 @@ export default function Home() {
                   type="text"
                   placeholder="Reciever Wallet"
                   className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"
-                  value={inputValue}
+                  value={inputValue.recipientAddress}
                   onChange={(e) => {
-                    if (Number(e.target.value) > -1 || e.target.value === '') {
-                      setInputValue(e.target.value)
-                    }
+                    setInputValue(prevState => ({...prevState, recipientAddress: e.target.value}))
                   }}
                 />
 
@@ -149,15 +155,19 @@ export default function Home() {
                   type="text"
                   placeholder="Amount to mint"
                   className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"
-                  value={inputValue}
+                  value={inputValue.transferAmount}
                   onChange={(e) => {
                     if (Number(e.target.value) > -1 || e.target.value === '') {
-                      setInputValue(e.target.value)
+                      setInputValue(prevState => ({ ...prevState, transferAmount: e.target.value}))
                     }
                   }}
                 />
 
-                <Button className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}>Transfer</Button>
+                <Button className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
+                  onClick={() => transferToken(inputValue.recipientAddress, inputValue.transferAmount).then(executed => {
+                    if (executed) return loadContractInfo()
+                  })}
+                >Transfer</Button>
               </div>
             </div>
           </TabsContent>
