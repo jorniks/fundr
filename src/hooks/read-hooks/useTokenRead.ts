@@ -4,7 +4,6 @@ import { LIRIO_TOKEN } from "@/constants/addresses/lirio-token";
 import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
 import useTokenSymbol from "./useTokenSymbol";
 import useTokenDecimal from "./useTokenDecimal";
-import useTokenTotalSupply from "./useTokenTotalSupply";
 import { useCallback } from "react";
 import { convertToDecimalValue } from "@/functions/misc-functions";
 import { useSetRecoilState } from "recoil";
@@ -17,7 +16,6 @@ export default function useTokenRead() {
   const contract = useLirioContract(tokenAddress)
   const tokenSymbol = useTokenSymbol(tokenAddress) || "LIR"
   const tokenDecimal = useTokenDecimal(tokenAddress)
-  const tokenTotalSupply = useTokenTotalSupply(tokenAddress)
   const setLirioBalance = useSetRecoilState(tokenBalanceState)
   const setBlacklistStatus = useSetRecoilState(blacklistStatusState)
   const setTokenTotalSupply = useSetRecoilState(tokenTotalSupplyState)
@@ -75,5 +73,5 @@ export default function useTokenRead() {
     }, [account, contract, setLirioBalance, tokenDecimal]
   )
   
-  return { tokenSymbol, tokenDecimal, tokenTotalSupply, getMintableBalance, getBlacklistStatus, getWalletBalance, getTokenTotalSupply }
+  return { tokenSymbol, tokenDecimal, getMintableBalance, getBlacklistStatus, getWalletBalance, getTokenTotalSupply }
 }
