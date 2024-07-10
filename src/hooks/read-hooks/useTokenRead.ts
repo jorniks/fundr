@@ -50,15 +50,15 @@ export default function useTokenRead() {
   const getTokenTotalSupply = useCallback(
     async () => {
       try {
-        const userBalance = await contract?.balanceOf(account)
-        let convertedBalance = convertToDecimalValue(userBalance?.toString(), tokenDecimal) || 0
+        const totalSupply = await contract?.totalSupply()
+        let convertedBalance = convertToDecimalValue(totalSupply?.toString(), tokenDecimal) || 0
         setTokenTotalSupply(convertedBalance)
 
         return convertedBalance || 0;
       } catch (error) {
         return 0;
       }
-    }, [account, contract, setTokenTotalSupply, tokenDecimal]
+    }, [contract, setTokenTotalSupply, tokenDecimal]
   )
 
   const getWalletBalance = useCallback(
