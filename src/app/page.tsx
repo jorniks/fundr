@@ -88,7 +88,7 @@ export default function Home() {
                   </div>
                   
                   <div className="">
-                    <Button className={`text-spray-300 underline-offset-2 hover:underline text-sm ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-60'}`}
+                    <Button className={`text-spray-300 underline-offset-2 hover:underline text-sm ${(!account || !incorrectNetwork || mintableBalance === 0) && 'pointer-events-none opacity-60'}`}
                       onClick={() => mintMaxAmount().then(() => loadContractInfo())}
                     >Mint Max</Button>
                   </div>
@@ -111,7 +111,7 @@ export default function Home() {
                 <WalletButton />
               :
                 <Button
-                  className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
+                  className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork || mintableBalance === 0) && 'pointer-events-none opacity-80'}`}
                   onClick={() => mintSpecificAmount(inputValue.mintAmount).then(() => loadContractInfo())}
                 >Mint</Button>
               }
@@ -126,7 +126,7 @@ export default function Home() {
                 {burnPercentages.map((burnPercentage, index) => (
                   <Button
                     key={index}
-                    className={`btn chestnut transition-all duration-300 w-1/5 py-3 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
+                    className={`btn chestnut transition-all duration-300 w-1/5 py-3 ${(!account || !incorrectNetwork || !(walletBalance > 0) ) && 'pointer-events-none opacity-80'}`}
                     onClick={() => burnToken((burnPercentage / 100)).then(() => loadContractInfo())}
                   >{burnPercentage}%</Button>
                 ))}
@@ -163,7 +163,7 @@ export default function Home() {
                   }}
                 />
 
-                <Button className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
+                <Button className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork || walletBalance === 0) && 'pointer-events-none opacity-80'}`}
                   onClick={() => transferToken(inputValue.recipientAddress, inputValue.transferAmount).then(executed => {
                     if (executed) return loadContractInfo()
                   })}
