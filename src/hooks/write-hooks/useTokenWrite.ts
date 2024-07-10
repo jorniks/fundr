@@ -10,7 +10,6 @@ import { useSetRecoilState } from "recoil";
 import { loadingState } from "@/app/state/atoms/atom";
 import { formatToBigInt } from "@/functions/format";
 import { toast } from "@/components/ui/use-toast";
-import useBlacklistStatus from "../read-hooks/useBlacklistStatus";
 import { errorCode } from "@/lib/metamask-error-codes";
 import useTokenRead from "../read-hooks/useTokenRead";
 

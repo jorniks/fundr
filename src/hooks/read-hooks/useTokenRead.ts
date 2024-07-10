@@ -7,6 +7,8 @@ import useTokenDecimal from "./useTokenDecimal";
 import useTokenTotalSupply from "./useTokenTotalSupply";
 import { useCallback } from "react";
 import { convertToDecimalValue } from "@/functions/misc-functions";
+import { useSetRecoilState } from "recoil";
+import { blacklistStatusState, tokenBalanceState } from "@/app/state/atoms/atom";
 
 
 export default function useTokenRead() {
@@ -16,6 +18,8 @@ export default function useTokenRead() {
   const tokenSymbol = useTokenSymbol(tokenAddress) || "LIR"
   const tokenDecimal = useTokenDecimal(tokenAddress)
   const tokenTotalSupply = useTokenTotalSupply(tokenAddress)
+  const setLirioBalance = useSetRecoilState(tokenBalanceState)
+  const setBlacklistStatus = useSetRecoilState(blacklistStatusState)
 
 
   const getMintableBalance = useCallback(
@@ -35,10 +39,11 @@ export default function useTokenRead() {
     async () => {
       try {
         const blacklistStatus = await contract?.isWalletBlacklisted()
+        setBlacklistStatus(blacklistStatus);
         return blacklistStatus;
       } catch (error) {
       }
-    }, [contract]
+    }, [contract, setBlacklistStatus]
   )
 
   const getWalletBalance = useCallback(
@@ -46,11 +51,13 @@ export default function useTokenRead() {
       try {
         const userBalance = await contract?.balanceOf(account)
         let convertedBalance = convertToDecimalValue(userBalance?.toString(), tokenDecimal) || 0
+        setLirioBalance(convertedBalance)
 
         return convertedBalance || 0;
       } catch (error) {
+        return 0;
       }
-    }, [account, contract, tokenDecimal]
+    }, [account, contract, setLirioBalance, tokenDecimal]
   )
   
   return { tokenSymbol, tokenDecimal, tokenTotalSupply, getMintableBalance, getBlacklistStatus, getWalletBalance }
