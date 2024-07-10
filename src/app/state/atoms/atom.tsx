@@ -30,3 +30,8 @@ export const tokenBalanceState = atom({
   key: "tokenBalanceState",
   default: 0, // Set your default network balance state here
 });
+
+export const tokenTotalSupplyState = atom({
+  key: "tokenTotalSupplyState",
+  default: 0, // Set your default network balance state here
+});

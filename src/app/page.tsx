@@ -8,26 +8,32 @@ import useTokenWrite from "@/hooks/write-hooks/useTokenWrite";
 import { Button } from "@/components/button";
 import { useWeb3React } from "@web3-react/core";
 import WalletButton from "@/components/WalletButtons";
+import { CHAIN_INFO } from "@/lib/services/chain-config";
+import { useRecoilValue } from "recoil";
+import { blacklistStatusState, tokenBalanceState, tokenTotalSupplyState } from "./state/atoms/atom";
 
 
 const burnPercentages = [ 10, 25, 50, 75, 100 ]
 
 
 export default function Home() {
-  const { account } = useWeb3React()
-  const [blacklistStatus, setBlacklistStatus] = useState<boolean>(false)
+  const { account, chainId } = useWeb3React()
+  const incorrectNetwork = (chainId && CHAIN_INFO.hasOwnProperty(chainId?.toString())) ? true : false
   const [mintableBalance, setMintableBalance] = useState<number | undefined>(0)
-  const [walletBalance, setWalletBalance] = useState<number | undefined>(0)
   const [inputValue, setInputValue] = useState<string>('')
-  const { tokenSymbol, getMintableBalance, getBlacklistStatus, getWalletBalance } = useTokenRead()
+  const { tokenSymbol, getMintableBalance, getBlacklistStatus, getWalletBalance, getTokenTotalSupply } = useTokenRead()
   const { mintSpecificAmount, mintMaxAmount, burnToken, toggleWalletBlacklist } = useTokenWrite()
+  const walletBalance = useRecoilValue(tokenBalanceState)
+  const blacklistStatus = useRecoilValue(blacklistStatusState)
+  const tokenTotalSupply = useRecoilValue(tokenTotalSupplyState)
 
   const loadContractInfo = useCallback(
     () => {
       getMintableBalance().then(setMintableBalance)
-      getBlacklistStatus().then(setBlacklistStatus)
-      getWalletBalance().then(setWalletBalance)
-    }, [getBlacklistStatus, getMintableBalance, getWalletBalance],
+      getBlacklistStatus()
+      getWalletBalance()
+      getTokenTotalSupply()
+    }, [getBlacklistStatus, getMintableBalance, getTokenTotalSupply, getWalletBalance],
   )
 
   useEffect(() => {
@@ -56,11 +62,11 @@ export default function Home() {
                   Your wallet will {!blacklistStatus && 'not'} be able to mint/burn LIRIO
                 </p>
               </div>
-              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist().then(() => loadContractInfo())} className={`${!account && 'pointer-events-none opacity-60'}`} />
+              <Switch checked={blacklistStatus} onClick={() => toggleWalletBlacklist().then(() => loadContractInfo())} className={`${(!account || !incorrectNetwork) && 'pointer-events-none opacity-60'}`} />
             </div>
 
             <div className="">
-              Minted balance {(walletBalance || 0)?.toLocaleString()} {tokenSymbol}
+              Total Supply {(tokenTotalSupply || 0)?.toLocaleString()} {tokenSymbol}
             </div>
             
             <div className="space-y-6">
@@ -71,7 +77,7 @@ export default function Home() {
                   </div>
                   
                   <div className="">
-                    <Button className={`text-spray-300 underline-offset-2 hover:underline text-sm ${!account && 'pointer-events-none opacity-60'}`}
+                    <Button className={`text-spray-300 underline-offset-2 hover:underline text-sm ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-60'}`}
                       onClick={() => mintMaxAmount().then(() => loadContractInfo())}
                     >Mint Max</Button>
                   </div>
@@ -94,7 +100,7 @@ export default function Home() {
                 <WalletButton />
               :
                 <Button
-                  className="btn spray rounded py-3 text-base w-full sm:w-2/5"
+                  className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
                   onClick={() => mintSpecificAmount(inputValue).then(() => {
                     setInputValue('')
                     loadContractInfo()
@@ -112,7 +118,7 @@ export default function Home() {
                 {burnPercentages.map((burnPercentage, index) => (
                   <Button
                     key={index}
-                    className={`btn chestnut transition-all duration-300 w-1/5 py-3 ${!account && 'pointer-events-none opacity-80'}`}
+                    className={`btn chestnut transition-all duration-300 w-1/5 py-3 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}
                     onClick={() => burnToken((burnPercentage / 100)).then(() => loadContractInfo())}
                   >{burnPercentage}%</Button>
                 ))}
@@ -121,16 +127,38 @@ export default function Home() {
           </TabsContent>
 
           <TabsContent className="container overflow-y-auto no-scrollbar bg-white/20 backdrop-blur-lg w-full max-w-xl shadow rounded py-10 space-y-6" value="transfer">
-            <div className="font-semibold text-xl">
-              COMING SOON
-            </div>
-
-            <div className="space-y-6 hidden">
-              <div className="">
-                <input type="text" placeholder="Amount to mint" className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"/>
+            <div className="space-y-1">
+              <div className="font-semibold">
+                <span className="mr-1.5 font-normal">Wallet balance</span> {(walletBalance || 0)?.toLocaleString()} {tokenSymbol}
               </div>
 
-              <Button className="btn spray rounded py-3 text-base w-full sm:w-2/5">Transfer</Button>
+              <div className="space-y-6">
+                <input
+                  type="text"
+                  placeholder="Reciever Wallet"
+                  className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"
+                  value={inputValue}
+                  onChange={(e) => {
+                    if (Number(e.target.value) > -1 || e.target.value === '') {
+                      setInputValue(e.target.value)
+                    }
+                  }}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Amount to mint"
+                  className="w-full rounded p-3 shadow-sm ring-1 ring-gray-400 focus:ring-gray-300 outline-none bg-transparent"
+                  value={inputValue}
+                  onChange={(e) => {
+                    if (Number(e.target.value) > -1 || e.target.value === '') {
+                      setInputValue(e.target.value)
+                    }
+                  }}
+                />
+
+                <Button className={`btn spray rounded py-3 text-base w-full sm:w-2/5 ${(!account || !incorrectNetwork) && 'pointer-events-none opacity-80'}`}>Transfer</Button>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
