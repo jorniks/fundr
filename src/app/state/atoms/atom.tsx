@@ -20,3 +20,13 @@ export const loadingState = atom({
   key: "loadingState",
   default: false, // Set your default loading state here
 });
+
+export const blacklistStatusState = atom({
+  key: "blacklistStatusState",
+  default: false, // Set your default loading state here
+});
+
+export const tokenBalanceState = atom({
+  key: "tokenBalanceState",
+  default: 0, // Set your default network balance state here
+});
