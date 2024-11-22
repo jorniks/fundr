@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import "bootstrap-icons/font/bootstrap-icons.css"
 import { ToastContainer } from 'react-toastify'
 import Footer from "@/components/Footer";
+import NavBar from "@/components/navbar";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
   
@@ -22,9 +23,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.className} bg-gray-950 text-white`}>
+      <body className={`${montserrat.className} bg-gray-950 text-white antialiased`}>
+        <div className="flex absolute top-0 left-0 start-1/2 transform -translate-x-1/2 -translate-y-1/2 -z-50">
+          <span className="bg-gradient-to-tl blur-3xl w-[55vw] h-[60vh] rounded-full origin-top-right -rotate-12 from-lime-900/70 via-indigo-900/70 to-blue-900/70 -z-10"></span>
+        </div>
+
         <RecoilContextProvider>
           <Web3ContextProvider>
+            <NavBar />
+
             {children}
 
             <Footer />
