@@ -1,8 +1,7 @@
 "use client"
 
-import Campaigns from "@/components/Campaigns"
+import CampaignsSection from "@/components/CampaignsSection"
 import HowItWorksComponent from "@/components/HowItWorks"
-import Image from "next/image"
 import Link from "next/link"
 
 const Home = () => {
@@ -86,7 +85,7 @@ const Home = () => {
         </aside>
       </section>
 
-      <Campaigns />
+      <CampaignsSection />
 
       <HowItWorksComponent />
     </main>

@@ -1,10 +1,9 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 
 
-const Campaigns = () => {
+const CampaignsSection = () => {
   return (
     <section className="container space-y-14">
       <aside className="max-w-3xl mx-auto text-center space-y-2 md:space-y-4">
@@ -51,4 +50,4 @@ const Campaigns = () => {
   )
 }
 
-export default Campaigns
+export default CampaignsSection
