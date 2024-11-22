@@ -33,7 +33,7 @@ const HowItWorksComponent = () => {
 
             <div className="grow pt-0.5 pb-8 sm:pb-12">
               <article className="">
-                <span className="text-white">Define Your Vision:</span>{" "} Clearly outline your campaign goals and what you want to achieve. Craft a compelling story that resonates with potential backers.
+                <span className="text-white font-medium">Define Your Vision:</span>{" "} Clearly outline your campaign goals and what you want to achieve. Craft a compelling story that resonates with potential backers.
               </article>
             </div>
           </div>
@@ -49,7 +49,7 @@ const HowItWorksComponent = () => {
 
             <div className="grow pt-0.5 pb-8 sm:pb-12">
               <article className="">
-                <span className="text-white">Set Up Your Campaign:</span>{" "} Create your campaign page on Fundr, including details like funding goals, rewards, and timelines. Upload visuals and provide compelling content to attract backers.
+                <span className="text-white font-medium">Set Up Your Campaign:</span>{" "} Create your campaign page on Fundr, including details like funding goals, rewards, and timelines. Upload visuals and provide compelling content to attract backers.
               </article>
             </div>
           </div>
@@ -65,7 +65,7 @@ const HowItWorksComponent = () => {
 
             <div className="grow pt-0.5 pb-8 sm:pb-12">
               <article className="">
-                <span className="text-white">Promote Your Campaign:</span>{" "} Share your campaign across social media, engage with your community, and use marketing strategies to drive traffic and attract backers.
+                <span className="text-white font-medium">Promote Your Campaign:</span>{" "} Share your campaign across social media, engage with your community, and use marketing strategies to drive traffic and attract backers.
               </article>
             </div>
           </div>
@@ -79,16 +79,16 @@ const HowItWorksComponent = () => {
 
             <div className="grow pt-0.5 pb-8 sm:pb-12">
               <article className="">
-                <span className="text-white">Track and Engage:</span> Monitor your campaign&apos;s progress, interact with backers, and keep them updated on milestones and achievements.
+                <span className="text-white font-medium">Track and Engage:</span> Monitor your campaign&apos;s progress, interact with backers, and keep them updated on milestones and achievements.
               </article>
             </div>
           </div>
 
           <div className="flex justify-start md:mt-5">
-            <Link href={"/create-campaign"} className="inline-flex items-center gap-x-3 btn lime p-1 ps-4">
+            <Link href={"/create-campaign"} className="inline-flex items-center gap-x-3 btn lime p-1.5 ps-4">
               Create Campaign
-              <span className="py-1.5 px-2.5 flex justify-center items-center gap-x-2 rounded-full bg-white/30 font-semibold text-white text-sm">
-                <i className="bi  bi-arrow-up-right"></i>
+              <span className="py-2 px-3 flex justify-center items-center gap-x-2 rounded-full bg-white/30 font-semibold text-white text-sm">
+                <i className="bi bi-arrow-up-right"></i>
               </span>
             </Link>
           </div>
