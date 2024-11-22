@@ -5,17 +5,32 @@
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    display: none;
   }
 
   /* Hide scrollbar for IE, Edge and Firefox */
   .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 
   .text-balance {
     text-wrap: balance;
+  }
+
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  a, button {
+    outline: none;
   }
 
   h1 {
@@ -36,6 +51,10 @@
 }
 
 @layer components {
+  .text-box {
+    @apply w-full py-3 px-2 border rounded focus:outline-none border-zinc-400 focus:border-zinc-900 bg-white appearance-none disabled:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed text-black
+  }
+
   .container {
     @apply w-full max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8
   }
