@@ -17,19 +17,35 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  h1 {
+    @apply font-semibold text-4xl sm:text-5xl md:text-6xl lg:text-6xl
+  }
+
+  h2 {
+    @apply font-semibold text-3xl md:text-4xl
+  }
+
+  h3 {
+    @apply text-lg font-semibold
+  }
+
+  article {
+    @apply text-gray-400 text-sm md:text-base
+  }
 }
 
 @layer components {
   .container {
-    @apply w-full max-w-[90%] mx-auto sm:px-8 px-4
+    @apply w-full max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8
   }
 
   .btn {
-    @apply outline-none shadow-md transition-all duration-500 rounded text-sm hover:shadow-lg font-medium
+    @apply outline-none shadow-md transition-all duration-500 rounded-full text-sm hover:shadow-lg font-medium
   }
 
-  .spray {
-    @apply hover:bg-spray-600 bg-spray-700 text-white
+  .lime {
+    @apply bg-lime-600 hover:bg-lime-700 text-white text-sm font-medium
   }
 
   .spray-dark {
