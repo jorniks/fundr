@@ -1,4 +1,4 @@
-## LIRIO TOKEN
+## Fundr
 
 ## Getting Started
 
