@@ -9,7 +9,7 @@ const Footer = () => {
           href="/"
         >
           <Image width={100} height={100} src="/fundrLogo.png" alt="Logo" className="w-8 h-8" />
-          <span>1omi.</span>
+          <span>fundr</span>
         </a>
 
         <div className="mt-3">
