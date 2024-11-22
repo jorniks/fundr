@@ -1,8 +1,5 @@
-import { ChainId } from '@swapsicledex/swapsicle-sdk'
-import RPC from '@/lib/rpc-list'
 
-
-export const defaultChainId = ChainId.BSC_TESTNET
+export const defaultChainId = 59141
 
 type ChainInfo = {
   explorer: string
@@ -16,17 +13,11 @@ type ChainInfo = {
 }
 
 export const CHAIN_INFO: { [key: number]: ChainInfo } = {
-  [ChainId.BSC_TESTNET]: {
-    explorer: "https://testnet.bscscan.com",
-    label: "BNB Smart Chain Testnet",
-    nativeCurrency: { name: "Binance Coin", symbol: "tBNB", decimals: 18 },
-    rpcUrl: RPC[ChainId.BSC_TESTNET],
-  },
-  [ChainId.TELOS_TESTNET]: {
-    explorer: "https://testnet.teloscan.io",
-    label: "Telos Testnet",
-    nativeCurrency: { name: "Telos", symbol: "TLOS", decimals: 18 },
-    rpcUrl: RPC[ChainId.TELOS_TESTNET],
+  59141: {
+    explorer: "https://sepolia.lineascan.build",
+    label: "Linea Sepolia",
+    nativeCurrency: { name: "LineaETH", symbol: "LineaETH", decimals: 18 },
+    rpcUrl: "https://rpc.sepolia.linea.build",
   },
 }
 

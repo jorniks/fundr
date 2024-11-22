@@ -1,6 +1,7 @@
 import GetContract from './contract/getContract';
 import { Contract } from '@ethersproject/contracts';
-import LIRIO_TOKEN_ABI from '@/constants/abis/lirio-token.json';
+import ERC20_TOKEN_ABI from '@/constants/abis/token.json';
+import { FUNDR_CONTRACT } from '@/constants/addresses/fundr-contract'
 import { Contract as StandardEthersContract } from 'ethers';
 import { ZeroAddress } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
@@ -19,7 +20,7 @@ export const useWeb3ReactContract = (contractAddress: string, contractABI: any):
 };
 
 // USES STANDARD ETHERS PROVIDER FOR WHEN web3-react DOESN'T HAVE A PROVIDER TO RELY ON
-// USED ONLY WHEN window.ethereum IS UNDEFINED
+// USED ONLY WHEN window.ethereum IS UNDEFINED (NO WALLET CONNECTION)
 export const useStandardEthersContract = (contractAddress: string, contractABI: any): StandardEthersContract | null => {
   if (!contractAddress || contractAddress === ZeroAddress || !contractABI) return null;
 
@@ -37,6 +38,10 @@ export const useContract = (contractAddress: string, contractABI: any): Contract
   return standardEthersContract;
 };
 
-export const useLirioContract = (tokenAddress: string): Contract | StandardEthersContract | null => {
-  return useContract(tokenAddress, LIRIO_TOKEN_ABI);
+export const useTokenContract = (tokenAddress: string): Contract | StandardEthersContract | null => {
+  return useContract(tokenAddress, ERC20_TOKEN_ABI);
+};
+
+export const useAppContract = (): Contract | StandardEthersContract | null => {
+  return useContract(FUNDR_CONTRACT, ERC20_TOKEN_ABI);
 };
