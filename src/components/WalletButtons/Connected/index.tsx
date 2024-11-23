@@ -24,26 +24,22 @@ import Image from 'next/image';
 import { NETWORK_LABEL } from '@/lib/network-list';
 import { Button } from '@/components/button';
 import Link from 'next/link';
-// import useNetworkTokenBalance from '@/hooks/read-hooks/useNetworkTokenBalance'
+import useNetworkTokenBalance from '@/hooks/read/useNetworkTokenBalance'
 import { CHAIN_INFO, defaultChainId } from '@/lib/services/chain-config';
-import { copyToClipboard } from '@/functions/misc-functions';
+import { copyToClipboard, truncateValue } from '@/functions/misc-functions';
 import { switchNetwork } from '@/lib/wallet/connector';
-import { formatNumberScale } from '@/functions/format'
-import { useRecoilValue } from 'recoil'
-import { tokenBalanceState } from '@/app/state/atoms/atom'
+import useTokenBalances from '@/hooks/read/useTokenBalances';
 
 
 const ConnectedWalletButton = () => {
-  // const { tokenSymbol, networkTokenBalance } = useNetworkTokenBalance()
-  const [tokenSymbol, networkTokenBalance] = ['useNetworkTokenBalance', 100]
+  const { tokenSymbol, networkTokenBalance } = useNetworkTokenBalance()
+  const tokenBalances = useTokenBalances();
   const [open, setOpen] = useState<boolean>(false);
   const [addressCopied, setAddressCopied] = useState<boolean>(false);
   const { account, chainId, isActive } = useWeb3React();
   const storedConnectionType = window?.localStorage?.getItem("ConnectionType");
   const connectionType = storedConnectionType ? (storedConnectionType as ConnectionType) : null;
   const disconnectWallet = useDisconnectFromWallet(setOpen);
-  const nativeCurrency = chainId && CHAIN_INFO[chainId]?.nativeCurrency?.symbol
-  const tokenBalance = useRecoilValue(tokenBalanceState)
   
   useEffect(() => {
     if (isActive && chainId !== defaultChainId) {
@@ -56,26 +52,26 @@ const ConnectedWalletButton = () => {
     <div className="flex gap-y-3 sm:flex-row flex-col-reverse items-center gap-x-3">
       <Select onValueChange={(newValue: string) => switchNetwork(Number(newValue), connectionType)}>
         <SelectTrigger className="min-w-[9rem] bg-black/20">
-          <div className="flex items-center justify-between w-full">
-            <div className="font-semibold"> {tokenSymbol} </div>
-            <div className="font-normal"> {formatNumberScale(tokenBalance)} </div>
-          </div>
+          <SelectValue placeholder="Balances" />
         </SelectTrigger>
 
         <SelectContent>
           <SelectGroup>
             <SelectLabel>
-              <div className="flex items-center justify-between">
-                <div className="font-semibold"> {tokenSymbol} </div>
-                <div className="font-normal"> {formatNumberScale(tokenBalance)} </div>
+              <div className="font-semibold">
+                {tokenSymbol}
+                <p className="text-xs text-white/30">{ truncateValue(networkTokenBalance, 12) }</p>
               </div>
             </SelectLabel>
-            <SelectLabel>
-              <div className="flex items-center justify-between">
-                <div className="font-semibold"> {nativeCurrency} </div>
-                <div className="font-normal"> {formatNumberScale(networkTokenBalance)} </div>
-              </div>
-            </SelectLabel>
+
+            {tokenBalances.map((tokenBalance, index) => (
+              <SelectLabel key={index}>
+                <div className="font-semibold">
+                  {tokenBalance.name}
+                  <p className="text-xs text-white/30">{ truncateValue(tokenBalance.balance, 8) }</p>
+                </div>
+              </SelectLabel>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>

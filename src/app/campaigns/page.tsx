@@ -1,3 +1,5 @@
+'use client'
+
 import CampaignCard from '@/components/CampaignCard'
 import LoadingCard from '@/components/LoadingCard'
 
