@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -6,9 +6,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/dialog"
+} from "@/components/ui/dialog"
 import { ConnectionType } from '@/lib/wallet/supported-connectors'
-import { useWeb3React } from '@web3-react/core'
 import WalletOption from '../WalletOptions'
 import { SUPPORTED_WALLETS } from '@/lib/services/supported-wallets'
 import Link from 'next/link'
@@ -20,16 +19,6 @@ import { METAMASK_URL } from '@/lib/services/chain-config'
 
 const NotConnectedWalletButton = () => {
   const [open, setOpen] = useState(false);
-  const { isActive } = useWeb3React()
-  const connectionType =
-    typeof window !== 'undefined'
-      ? (window?.localStorage?.getItem(
-        'ConnectionType'
-      ) as keyof typeof ConnectionType)
-      : null;
-  const isNoOptionActive = !isActive || (isActive && connectionType === null);
-
-  
 
   const walletOptions = useMemo(() => {
     return Object.keys(ConnectionType).map((walletKey, index) => {
@@ -101,25 +90,16 @@ const InstallMetamaskButton = ({
   iconName: string;
 }) => {
   return (
-    <Link
-      href={METAMASK_URL}
-      target="_blank"
-      className="btn w-full items-center flex justify-start gap-x-2 spray py-2"
-    >
-      <div className="px-2">
-        <Image
-          src={`/img/${iconName}`}
-          alt={walletName}
-          width={50}
-          height={50}
-          className=""
-        />
-      </div>
+    <Link href={METAMASK_URL} target="_blank" className="col-span-6 sm:col-span-4 rounded-md btn spray-dark py-2 flex flex-col gap-y-3 items-center">
+      <Image
+        src={`/img/${iconName}`}
+        alt={walletName}
+        width={50}
+        height={50}
+        className=""
+      />
 
-      <div className="">
-        <div className="text-xs">{walletName} was not found</div>
-        <div className="text-left font-medium text-lg"> Install Metamask </div>
-      </div>
+      <div className="font-medium text-xs text-center"> Install {walletName} </div>
     </Link>
   );
 };

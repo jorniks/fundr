@@ -22,9 +22,7 @@ export function getConnection(c: Connector | ConnectionType) {
   }
 }
 
-export const switchNetwork = async (chainId: number) => {
-  const connectionType = (window?.localStorage?.getItem("ConnectionType")) as ConnectionType
-  
+export const switchNetwork = async (chainId: number, connectionType: ConnectionType | null) => {
   if (!connectionType) return
 
   const { connector } = getConnection(connectionType)
