@@ -77,8 +77,8 @@ const CreateCampaign = () => {
             <div>
               <label htmlFor="preferredToken" className="block mb-2 text-sm font-medium text-white">Preferred Token</label>
 
-              <Select onValueChange={updateFormValues}>
-                <SelectTrigger className="text-box text-base py-6">
+              <Select onValueChange={(value) => setFormValues({ ...formValues, token: value })}>
+                <SelectTrigger className="text-box text-base py-3">
                   <SelectValue placeholder="Preferred Token" />
                 </SelectTrigger>
 
