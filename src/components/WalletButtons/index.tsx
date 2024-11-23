@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/select"
 import { NETWORK_LABEL } from '@/lib/network-list'
 import { switchNetwork } from '@/lib/wallet/connector'
-import useNetworkTokenBalance from '@/hooks/read-hooks/useNetworkTokenBalance'
 import { formatNumberScale } from '@/functions/format'
 import { CHAIN_INFO } from '@/lib/services/chain-config'
 import { useRecoilValue } from 'recoil'
@@ -24,7 +23,8 @@ const WalletButton = () => {
   const { account, chainId } = useWeb3React()
   const nativeCurrency = chainId && CHAIN_INFO[chainId]?.nativeCurrency?.symbol
   const tokenBalance = useRecoilValue(tokenBalanceState)
-  const { tokenSymbol, networkTokenBalance } = useNetworkTokenBalance()
+
+  const [tokenSymbol, networkTokenBalance] = ['useNetworkTokenBalance', 100]
   
   return (
     !account ?
@@ -50,9 +50,7 @@ const WalletButton = () => {
           </SelectContent>
         </Select>
         
-        <Select
-          onValueChange={(newValue: string) => switchNetwork(Number(newValue))}
-        >
+        <Select onValueChange={(newValue: string) => switchNetwork(Number(newValue))}>
           <SelectTrigger className="min-w-[9rem] bg-black/20">
             <div className="flex items-center justify-between w-full">
               <div className="font-semibold"> { tokenSymbol } </div>

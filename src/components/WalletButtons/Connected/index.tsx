@@ -40,8 +40,8 @@ const ConnectedWalletButton = () => {
 
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <button className="btn spray rounded-lg px-5 py-2.5">{account ? shortenAddress(account) : "Not Connected"}</button>
+      <DialogTrigger className="btn spray px-5 py-2.5">
+        {account ? shortenAddress(account) : "Not Connected"}
       </DialogTrigger>
 
       <DialogContent className="max-w-sm w-full bg-gradient-bg text-white border-0">

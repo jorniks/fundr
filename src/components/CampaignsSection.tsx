@@ -1,6 +1,6 @@
 "use client"
 
-import Image from "next/image"
+import CampaignCard from "./CampaignCard"
 
 
 const CampaignsSection = () => {
@@ -16,25 +16,7 @@ const CampaignsSection = () => {
 
       <aside className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {[0, 1, 2, 3, 4, 5].map((i) => (
-          <a key={i} href={`/campaign/${i}`}
-            className="flex flex-col h-full border border-white/5 hover:border-transparent hover:shadow-lg transition duration-300 rounded-lg p-5 bg-white/10"
-          >
-            <Image width={100} height={100} className="w-full object-cover rounded-md" alt="Proposal Image" src="https://images.unsplash.com/photo-1665686376173-ada7a0031a85" />
-
-            <div className="space-y-1 my-4">
-              <h3 className="">Announcing a free plan for small teams</h3>
-
-              <article className="text-sm">At Wake, our mission has always been focused on bringing openness.</article>
-            </div>
-
-            <div className="mt-auto flex items-center gap-x-3">
-              <Image width={100} height={100} className="size-8 rounded-full" alt="User Avatar"
-                src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=320&h=320&q=80"
-              />
-
-              <h5 className="text-sm text-gray-300">0x23.....38df</h5>
-            </div>
-          </a>
+          <CampaignCard key={i} />
         ))}
       </aside>
 

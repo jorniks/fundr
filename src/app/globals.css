@@ -67,6 +67,10 @@
     @apply bg-lime-600 hover:bg-lime-700 text-white text-sm font-medium
   }
 
+  .spray {
+    @apply hover:bg-spray-600 bg-spray-700 text-white
+  }
+
   .spray-dark {
     @apply hover:bg-spray-700 bg-spray-900 text-white
   }

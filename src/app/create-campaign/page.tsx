@@ -128,7 +128,7 @@ const CreateCampaign = () => {
             </div>
           </div>
 
-          <Button className="btn lime rounded-md py-4" onClick={createCampaigns}>Create Campaign</Button>
+          <Button className="btn lime py-4" onClick={createCampaigns}>Create Campaign</Button>
         </section>
       </div>
     </main>

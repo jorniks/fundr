@@ -68,8 +68,8 @@ const NotConnectedWalletButton = () => {
   return (
     <div className="">
       <Dialog>
-        <DialogTrigger asChild>
-          <button className="btn spray px-6 py-3">Connect Wallet</button>
+        <DialogTrigger className='btn spray py-3 px-6'>
+          Connect Wallet
         </DialogTrigger>
 
         <DialogContent className="max-w-sm w-full bg-gradient-bg text-white border-0">
