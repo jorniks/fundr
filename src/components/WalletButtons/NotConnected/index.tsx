@@ -17,7 +17,7 @@ import { METAMASK_URL } from '@/lib/services/chain-config'
 
 
 
-const NotConnectedWalletButton = () => {
+const NotConnectedWalletButton = ({buttonText = "Connect Wallet"}) => {
   const [open, setOpen] = useState(false);
 
   const walletOptions = useMemo(() => {
@@ -58,7 +58,7 @@ const NotConnectedWalletButton = () => {
     <div className="">
       <Dialog>
         <DialogTrigger className='btn spray py-3 px-6'>
-          Connect Wallet
+          {buttonText}
         </DialogTrigger>
 
         <DialogContent className="max-w-sm w-full bg-gradient-bg text-white border-0">
@@ -91,13 +91,7 @@ const InstallMetamaskButton = ({
 }) => {
   return (
     <Link href={METAMASK_URL} target="_blank" className="col-span-6 sm:col-span-4 rounded-md btn spray-dark py-2 flex flex-col gap-y-3 items-center">
-      <Image
-        src={`/img/${iconName}`}
-        alt={walletName}
-        width={50}
-        height={50}
-        className=""
-      />
+      <Image width={50} height={50} src={`/img/${iconName}`} alt={walletName} className="" />
 
       <div className="font-medium text-xs text-center"> Install {walletName} </div>
     </Link>
