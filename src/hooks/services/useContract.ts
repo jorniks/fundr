@@ -1,6 +1,7 @@
 import GetContract from './contract/getContract';
 import { Contract } from '@ethersproject/contracts';
 import ERC20_TOKEN_ABI from '@/constants/abis/token.json';
+import FUNDR_ABI from "@/constants/abis/fundr.json"
 import { FUNDR_CONTRACT } from '@/constants/addresses/fundr-contract'
 import { Contract as StandardEthersContract } from 'ethers';
 import { ZeroAddress } from 'ethers';
@@ -43,5 +44,5 @@ export const useTokenContract = (tokenAddress: string): Contract | StandardEther
 };
 
 export const useAppContract = (): Contract | StandardEthersContract | null => {
-  return useContract(FUNDR_CONTRACT, ERC20_TOKEN_ABI);
+  return useContract(FUNDR_CONTRACT, FUNDR_ABI);
 };
