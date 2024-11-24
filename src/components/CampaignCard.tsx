@@ -20,7 +20,8 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
 
   const tokenInfo = retrievePreferredToken(campaign?.preferredToken)
   const targetAmount = convertToDecimalValue(String(campaign?.goal * 1000000), tokenInfo?.decimal || 6)
-  const percentageGotten = 23
+  const amountRaised = convertToDecimalValue(String(campaign?.totalRaised), tokenInfo?.decimal || 6)
+  const percentageGotten = Math.round((amountRaised * 100) / targetAmount)
 
   return (
     <Dialog>
