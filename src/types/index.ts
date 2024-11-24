@@ -30,3 +30,9 @@ export type TimerState = {
   completed?: boolean;
   isLoading?: boolean;
 };
+
+export enum ApprovalType {
+  UNKNOWN = 'UNKNOWN',
+  NOT_APPROVED = 'NOT_APPROVED',
+  APPROVED = 'APPROVED',
+}
