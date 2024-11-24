@@ -46,7 +46,7 @@
   }
 
   article {
-    @apply text-zinc-400 text-sm md:text-base
+    @apply text-zinc-300 text-sm md:text-base
   }
 }
 
