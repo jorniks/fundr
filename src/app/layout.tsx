@@ -5,6 +5,7 @@ import RecoilContextProvider from "@/providers/RecoilRootProvider";
 import Web3ContextProvider from "@/providers/web3ReactProvider";
 import { Toaster } from "@/components/ui/toaster";
 import "bootstrap-icons/font/bootstrap-icons.css"
+import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify'
 import Footer from "@/components/Footer";
 import NavBar from "@/components/navbar";
@@ -36,7 +37,9 @@ export default function RootLayout({
 
             <Footer />
             <Toaster />
-            <ToastContainer />
+            <ToastContainer
+              position="bottom-left"
+            />
           </Web3ContextProvider>
         </RecoilContextProvider>
       </body>
