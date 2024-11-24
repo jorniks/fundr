@@ -13,6 +13,7 @@ import {
 import { useWeb3React } from "@web3-react/core";
 import NotConnectedWalletButton from "@/components/WalletButtons/NotConnected";
 import { useContractWrite } from "@/hooks/write/useContractWrite";
+import { retrievePreferredToken } from "@/functions/misc-functions";
 
 
 const CreateCampaign = () => {
@@ -25,6 +26,7 @@ const CreateCampaign = () => {
     token: "",
     goal: "",
     deadline: "",
+    decimal: 6,
   })
 
   function updateFormValues(e: any) {
@@ -78,7 +80,13 @@ const CreateCampaign = () => {
             <div>
               <label htmlFor="preferredToken" className="block mb-2 text-sm font-medium text-white">Preferred Token</label>
 
-              <Select onValueChange={(value) => setFormValues({ ...formValues, token: value })}>
+              <Select onValueChange={(value) => {
+                setFormValues({
+                  ...formValues,
+                  token: value,
+                  decimal: retrievePreferredToken(value)?.decimal || 6
+                })
+              }}>
                 <SelectTrigger className="text-box text-base py-3">
                   <SelectValue placeholder="Preferred Token" />
                 </SelectTrigger>
@@ -142,6 +150,7 @@ const CreateCampaign = () => {
                     token: "",
                     goal: "",
                     deadline: "",
+                    decimal: 6,
                   })
                 }
               })
