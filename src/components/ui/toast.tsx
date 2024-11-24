@@ -67,7 +67,7 @@ const Toast = React.forwardRef<
     switch (variant) {
       case "success":
         title = "Success",
-          className = "hover:bg-green-800 bg-green-700 bg-opacity-30 backdrop-blur-lg";
+          className = "hover:bg-opacity-100 bg-green-700 bg-opacity-80 backdrop-blur-lg";
         Icon = (
           <RiCheckboxCircleFill
             className="size-5 shrink-0 fill-success"
@@ -77,7 +77,7 @@ const Toast = React.forwardRef<
         break
       case "warning":
         title = "Warning",
-          className = "hover:bg-yellow-700 bg-yellow-600 bg-opacity-30 backdrop-blur-lg";
+          className = "hover:bg-opacity-100 bg-yellow-600 bg-opacity-80 backdrop-blur-lg";
         Icon = (
           <RiErrorWarningFill
             className="size-5 shrink-0 fill-warning"
@@ -87,7 +87,7 @@ const Toast = React.forwardRef<
         break
       case "error":
         title = "Error",
-          className = "hover:bg-chestnut-800 bg-chestnut-700 bg-opacity-30 backdrop-blur-lg";
+          className = "hover:bg-opacity-100 bg-chestnut-700 bg-opacity-80 backdrop-blur-lg";
         Icon = (
           <RiCloseCircleFill
             className="size-5 shrink-0 fill-error"
@@ -123,7 +123,7 @@ const Toast = React.forwardRef<
           // base
           "flex h-fit max-w-[320px] w-full overflow-hidden shadow-xl rounded-md text-white",
           // background color
-          "hover:bg-spray-800 bg-spray-700 bg-opacity-30 backdrop-blur-lg",
+          "hover:bg-opacity-100 bg-spray-700 bg-opacity-80 backdrop-blur-lg",
           // border color
           " ",
           // swipe
