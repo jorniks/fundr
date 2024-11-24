@@ -10,9 +10,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useWeb3React } from "@web3-react/core";
+import NotConnectedWalletButton from "@/components/WalletButtons/NotConnected";
+import { useContractWrite } from "@/hooks/write/useContractWrite";
 
 
 const CreateCampaign = () => {
+  const { account } = useWeb3React()
+  const { createNewCampaign } = useContractWrite()
   const [formValues, setFormValues] = useState({
     title: "",
     imageLink: "",
@@ -27,10 +32,6 @@ const CreateCampaign = () => {
       ...prevState,
       [e.target.id]: e.target.value
     }))
-  }
-
-  function createCampaigns() {
-    return false;
   }
 
   return (
@@ -110,7 +111,7 @@ const CreateCampaign = () => {
             <div>
               <label htmlFor="description" className="block mb-2 text-sm font-medium text-white">Description</label>
               
-              <textarea id="description" className="text-box" placeholder="Describe your campaign"></textarea>
+              <textarea id="description" className="text-box" placeholder="Describe your campaign" onChange={updateFormValues} value={formValues.description}></textarea>
             </div>
 
             {/* Funding Goal */}
@@ -122,13 +123,30 @@ const CreateCampaign = () => {
 
             {/* Campaign Duration */}
             <div>
-              <label htmlFor="endDate" className="block mb-2 text-sm font-medium text-white">Campaign Deadline</label>
+              <label htmlFor="deadline" className="block mb-2 text-sm font-medium text-white">Campaign Deadline</label>
               
-              <input type="datetime-local" id="endDate" value={formValues.deadline} onChange={updateFormValues} className="text-box" min={new Date().toISOString().slice(0, 16)} />
+              <input type="datetime-local" id="deadline" value={formValues.deadline} onChange={updateFormValues} className="text-box" min={new Date().toISOString().slice(0, 16)} />
             </div>
           </div>
 
-          <Button className="btn lime py-4" onClick={createCampaigns}>Create Campaign</Button>
+          {!account ?
+            <NotConnectedWalletButton buttonClass="w-full rounded py-4" />
+          :
+            <Button className="btn lime py-4" onClick={() => {
+              createNewCampaign(formValues).then(response => {
+                if (response === true) {
+                  setFormValues({
+                    title: "",
+                    imageLink: "",
+                    description: "",
+                    token: "",
+                    goal: "",
+                    deadline: "",
+                  })
+                }
+              })
+            }}>Create Campaign</Button>
+          }
         </section>
       </div>
     </main>
