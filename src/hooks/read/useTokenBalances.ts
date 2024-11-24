@@ -39,7 +39,6 @@ export default function useTokenBalances() {
           })
         );
         
-        console.log(balancePromises);
         setTokenBalances(balancePromises)
       }
     }

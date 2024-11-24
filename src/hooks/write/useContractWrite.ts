@@ -8,6 +8,14 @@ import { toast } from "react-toastify"
 import { toast as customToast } from "@/components/ui/use-toast"
 import { CHAIN_INFO } from "@/lib/services/chain-config"
 
+/*
+cancelProposal
+claimFunds
+contribute
+createProposal
+withdrawContribution
+*/
+
 export const useContractWrite = () => {
   const { account, chainId } = useWeb3React()
   const contract = useAppContract()

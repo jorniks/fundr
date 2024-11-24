@@ -37,7 +37,7 @@ const CountdownTimer = ({ timestamp, clockOnly = true }: CountdownTimerProps) =>
       <span>{timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s</span>
     :
       <div className="">
-        <h6 className="font-light">Donations end in</h6>
+        <h6 className="font-light text-sm">Donations end in</h6>
       
         <div className="flex place-content-between items-center">
           <span className='font-medium'>{timeLeft.days}d {timeLeft.hours}h {timeLeft.minutes}m {timeLeft.seconds}s</span>
