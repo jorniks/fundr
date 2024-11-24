@@ -13,10 +13,10 @@ const CampaignCard = () => {
   return (
     <Dialog>
       <DialogTrigger className="">
-        <div className="flex flex-col h-full border border-white/5 hover:border-transparent hover:shadow-lg transition duration-300 rounded-lg p-5 bg-white/10">
+        <div className="flex flex-col h-full border border-white/5 hover:border-transparent hover:shadow-lg transition duration-300 rounded-lg p-5 bg-white/10 text-justify">
           <Image width={100} height={100} className="w-full object-cover rounded-md" alt="Proposal Image" src="https://images.unsplash.com/photo-1665686376173-ada7a0031a85" />
 
-          <div className="space-y-1 my-4">
+          <div className="space-y-1 my-4 flex-1">
             <h3 className="">Announcing a free plan for small teams</h3>
 
             <article className="text-sm">At Wake, our mission has always been focused on bringing openness.</article>
