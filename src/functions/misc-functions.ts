@@ -1,4 +1,10 @@
+import { preferredTokens } from "@/constants/addresses/preferred-tokens";
 import { errorCode } from "@/lib/metamask-error-codes";
+
+export const retrievePreferredToken = (tokenAddress: string) => {
+  const token = preferredTokens.find(({ address }) => address === tokenAddress);
+  return token;
+}
 
 export const calculateTimeLeft = (timestamp: number) => {
   let difference = timestamp * 1000 - Date.now();
