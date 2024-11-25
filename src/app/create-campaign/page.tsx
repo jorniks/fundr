@@ -84,7 +84,7 @@ const CreateCampaign = () => {
                 setFormValues({
                   ...formValues,
                   token: value,
-                  decimal: retrievePreferredToken(value)?.decimal || 6
+                  decimal: retrievePreferredToken(value)?.decimal
                 })
               }}>
                 <SelectTrigger className="text-box text-base py-3">

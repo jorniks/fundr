@@ -3,7 +3,7 @@ import { errorCode } from "@/lib/metamask-error-codes";
 
 export const retrievePreferredToken = (tokenAddress: string) => {
   const token = preferredTokens.find(({ address }) => address === tokenAddress);
-  return token;
+  return token ? token : preferredTokens[0];
 }
 
 export const calculateTimeLeft = (timestamp: number) => {
