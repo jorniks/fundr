@@ -10,8 +10,8 @@ export type CampaignType = {
   endDate: number;
   goal: number;
   imageLink: string;
-  isCancelled: boolean;
-  isClaimed: boolean;
+  status: number;
+  tokenDecimals: number;
   preferredToken: string;
   title: string;
   totalRaised: number;
@@ -36,3 +36,5 @@ export enum ApprovalType {
   NOT_APPROVED = 'NOT_APPROVED',
   APPROVED = 'APPROVED',
 }
+
+export enum CampaignStatus { Active, Ended, Cancelled, Claimed }
