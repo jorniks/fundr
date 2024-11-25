@@ -8,20 +8,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Button } from '@/components/button'
-import { CampaignType } from '@/types'
+import { ApprovalType, CampaignType } from '@/types'
 import { formatNumberScale, shortenAddress } from '@/functions/format'
 import CountdownTimer from './ui/count-down-timer'
 import { convertToDecimalValue, retrievePreferredToken } from '@/functions/misc-functions'
 import LoadingCard from './LoadingCard'
 import { Progress } from './ui/progress'
+import { useApprovalState } from '@/hooks/useApproveCallback'
+import { useState } from 'react'
+import { useWeb3React } from '@web3-react/core'
+import NotConnectedWalletButton from './WalletButtons/NotConnected'
+import { useContractWrite } from '@/hooks/write/useContractWrite'
 
 const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
-  if (!campaign?.creator) return <LoadingCard />
-
+  const { account } = useWeb3React()
+  const { contributeToCampaign } = useContractWrite()
   const tokenInfo = retrievePreferredToken(campaign?.preferredToken)
-  const targetAmount = convertToDecimalValue(String(campaign?.goal * 1000000), tokenInfo?.decimal || 6)
-  const amountRaised = convertToDecimalValue(String(campaign?.totalRaised), tokenInfo?.decimal || 6)
+  const targetAmount = convertToDecimalValue(String(campaign?.goal), tokenInfo?.decimal)
+  const amountRaised = convertToDecimalValue(String(campaign?.totalRaised), tokenInfo?.decimal)
   const percentageGotten = Math.round((amountRaised * 100) / targetAmount)
+  const [amountToContribute, setAmountToContribute] = useState<string>("")
+  const [approvalState, approveSpend] = useApprovalState(amountToContribute, tokenInfo)
+
+
+  if (!campaign?.creator) return <LoadingCard />
 
   return (
     <Dialog>
@@ -60,8 +70,15 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
         <Image width={100} height={55} className="w-full object-cover rounded-md" alt={`${campaign?.title} campaign image`} src={campaign?.imageLink} />
 
         <div className="pb-6 gap-x-2 space-y-6 mt-8">
-          <input type="number" className="text-box" placeholder='Donation amount' />
-          <Button className="w-full max-w-[50%] py-4 btn lime font-medium">Donate</Button>
+          <input type="number" className="text-box" placeholder='Donation amount' value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} />
+
+          {!account ?
+            <NotConnectedWalletButton />
+          : approvalState === ApprovalType.UNKNOWN || approvalState === ApprovalType.NOT_APPROVED ?
+              <Button className="w-full max-w-[50%] py-4 btn spray font-medium" onClick={approveSpend}>Approve</Button>
+          :
+            <Button className="w-full max-w-[50%] py-4 btn lime font-medium" onClick={() => contributeToCampaign(campaign?.id, amountToContribute, tokenInfo?.decimal)}>Donate</Button>
+          }
         </div>
       </DialogContent>
     </Dialog>

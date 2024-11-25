@@ -7,6 +7,7 @@ import { extractErrorMessage } from "@/functions/misc-functions"
 import { toast } from "react-toastify"
 import { toast as customToast } from "@/components/ui/use-toast"
 import { CHAIN_INFO } from "@/lib/services/chain-config"
+import { formatToBigInt } from "@/functions/format"
 
 /*
 cancelProposal
@@ -24,7 +25,7 @@ export const useContractWrite = () => {
 
   const createNewCampaign = useCallback(
     async (formValues: any) => {
-      const { title, description, imageLink, goal, deadline, token } = formValues;
+      const { title, description, imageLink, goal, deadline, token, decimal } = formValues;
       setIsLoading(true)
 
       if (!account) {
@@ -70,7 +71,7 @@ export const useContractWrite = () => {
       }
       
       try {
-        const amountGoal = BigInt(goal)
+        const amountGoal = formatToBigInt(goal, decimal)
         const createdCampaign = await contract?.createProposal(title, description, imageLink, amountGoal, (new Date(deadline).getTime() / 1000), token);
         const creationReceipt = await createdCampaign?.wait();
 
@@ -90,7 +91,45 @@ export const useContractWrite = () => {
     }, [account, contract, explorerURL, setIsLoading]
   )
 
+  const contributeToCampaign = useCallback(
+    async (proposalId: number, contribution: string, decimal: number) => {
+      setIsLoading(true)
+
+      if (!account) {
+        toast.error("No wallet connected")
+        setIsLoading(false)
+        return
+      }
+
+      if (!contribution) {
+        toast.info("Contribution amount is required")
+        setIsLoading(false)
+        return
+      }
+      
+      try {
+        const amountGoal = formatToBigInt(contribution, decimal)
+        const createdCampaign = await contract?.contribute(proposalId, amountGoal);
+        const creationReceipt = await createdCampaign?.wait();
+
+        customToast({
+          variant: "success",
+          description: "Contribution successfully sent",
+          action: {url: `${explorerURL}/tx/${creationReceipt?.hash || creationReceipt?.transactionHash}`, label: "View in explorer"}
+        })
+        setIsLoading(false)
+        return true
+      } catch (contributeToCampaignError: {} | any) {
+        const errorMessage = extractErrorMessage(contributeToCampaignError);
+        toast.error(errorMessage)
+        setIsLoading(false)
+        return false
+      }
+    }, [account, contract, explorerURL, setIsLoading]
+  )
+
   return {
-    createNewCampaign
+    createNewCampaign,
+    contributeToCampaign
   }
 }

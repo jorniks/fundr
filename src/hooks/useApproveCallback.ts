@@ -11,8 +11,9 @@ import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
 import { toast } from "react-toastify";
 import { ApprovalType } from "@/types";
 
-export function useApprovalState(amountToApprove: string, tokenAddress: string, tokenDecimal: number): [ApprovalType, () => Promise<void>] {
+export function useApprovalState(amountToApprove: string, tokenInfo: any): [ApprovalType, () => Promise<void>] {
   const { account, chainId } = useWeb3React();
+  const { address: tokenAddress, decimal: tokenDecimal } = tokenInfo
   const tokenContract = useTokenContract(tokenAddress)
   const [currentAllowance, setCurrentAllowance] = useState(0)
   const explorerURL = chainId && CHAIN_INFO[defaultChainId].explorer
@@ -42,13 +43,19 @@ export function useApprovalState(amountToApprove: string, tokenAddress: string, 
     setIsLoading(true)
     
     if (approvalState === ApprovalType.APPROVED) {
-      customToast({ variant: "info", description: "Spend already approved!" })
+      toast.info("Spend already approved!")
       setIsLoading(false)
       return
     }
 
     if (!account) {
-      customToast({ variant: "error", description: "No wallet connected!" })
+      toast.error("No wallet connected!")
+      setIsLoading(false)
+      return
+    }
+
+    if (!amountToApprove) {
+      toast.error("Amount is required!")
       setIsLoading(false)
       return
     }
