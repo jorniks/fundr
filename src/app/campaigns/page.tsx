@@ -1,34 +1,10 @@
 'use client'
 
 import CampaignCard from '@/components/CampaignCard'
-import { useContractInfo, useGetAllCampaigns } from '@/hooks/read/useContractInfo'
-import { useAppContract } from '@/hooks/services/useContract'
-import { CampaignType } from '@/types'
-import { useCallback, useEffect, useState } from 'react'
+import { useAllCampaigns } from '@/hooks/read/useContractInfo'
 
 const Campaigns = () => {
-  const allCampaigns = useGetAllCampaigns()
-  const { getAllCampaigns } = useContractInfo()
-  const [campaigns, setCampaigns] = useState<CampaignType[]>([])
-  const contract = useAppContract()
-
-  const loadCampaigns = useCallback(
-    () => {
-      getAllCampaigns().then(setCampaigns)
-    }, [getAllCampaigns]
-  )
-
-  useEffect(() => {
-    loadCampaigns()
-
-    contract?.on('ContributionMade', loadCampaigns)
-    contract?.on('FundsClaimed', loadCampaigns)
-    contract?.on('ContributionWithdrawn', loadCampaigns)
-
-    return () => {
-      contract?.removeAllListeners();
-    }
-  }, [contract, loadCampaigns])
+  const allCampaigns = useAllCampaigns()
   
   
   return (

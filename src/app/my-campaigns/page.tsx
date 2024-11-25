@@ -1,12 +1,12 @@
 "use client"
 
 import CampaignCard from '@/components/CampaignCard';
-import LoadingCard from '@/components/LoadingCard';
+import { useMyCampaigns } from '@/hooks/read/useContractInfo'
 import Link from 'next/link'
-import { useState } from 'react'
 
 const MyCampaigns = () => {
-  const [campaignList, setCampaignList] = useState([]);
+  const myCampaigns = useMyCampaigns()
+
   
   return (
     <main className="container py-40 min-h-screen space-y-14">
@@ -25,27 +25,19 @@ const MyCampaigns = () => {
       </div>
 
       <div>
-        {campaignList.length === 0 && (
+        {myCampaigns?.length === 0 && (
           <div className="text-center space-y-3">
             <i className="bi bi-emoji-frown-fill text-3xl"></i>
             <h2 className="text-xl">No Campaigns Available</h2>
-            <article className="">You haven't created any campaigns yet. Start by creating your first campaign to see it listed here!</article>
+            <article className="">You haven&apos;t created any campaigns yet. Start by creating your first campaign to see it listed here!</article>
           </div>
         )}
       </div>
 
-      <div className="grid lg:grid-cols-2 lg:gap-y-16 gap-10">
-        {false ? (
-          Array.from({ length: 2 }).map((_, index) => (
-            <LoadingCard key={index} />
-          ))
-        ) : (
-          <>
-            {campaignList.map((campaign, index) => (
-              <CampaignCard key={index} />
-            ))}
-          </>
-        )}
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-y-10 sm:gap-x-6">
+        {myCampaigns?.map((campaign, index) => (
+          <CampaignCard key={index} campaign={campaign} />
+        ))}
       </div>
     </main>
   )
