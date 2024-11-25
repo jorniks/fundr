@@ -29,6 +29,10 @@
     -moz-appearance: textfield;
   }
 
+  main {
+    @apply min-h-screen
+  }
+
   a, button {
     outline: none;
   }
