@@ -1,7 +1,6 @@
 'use client'
 
 import CampaignCard from '@/components/CampaignCard'
-import LoadingCard from '@/components/LoadingCard'
 import { useContractInfo, useGetAllCampaigns } from '@/hooks/read/useContractInfo'
 import { useAppContract } from '@/hooks/services/useContract'
 import { CampaignType } from '@/types'
