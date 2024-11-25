@@ -1,129 +1,159 @@
 import { useWeb3React } from "@web3-react/core"
 import { useAppContract } from "../services/useContract"
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { CampaignType } from "@/types"
+import { placeholderCampaign } from "@/lib/utils"
 
-export const useContractInfo = () => {
-  const { account } = useWeb3React()
+
+export const useAllCampaigns = () => {
   const contract = useAppContract()
-  
+  const [allCampaigns, setAllCampaigns] = useState<CampaignType[]>([])
+  const [loadingCampaigns, setLoadingCampaigns] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => (placeholderCampaign)))
 
-  const getAllCampaigns = useCallback(
-    async () => {
+  useEffect(() => {
+    const fetchAllCampaigns = async () => {
       try {
-        const proposals = await contract?.getAllProposals();
-        console.log('campaign', proposals);
-        return proposals;
+        const campaigns = await contract?.getAllCampaigns()
+        const filteredAllCampaigns = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
+
+        if (filteredAllCampaigns?.length === 0) {
+          setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
+        }
+
+        const sortedArrayOfEvents = [...filteredAllCampaigns]?.sort(
+          (currentEvent, nextEvent) => currentEvent?.endDate - nextEvent?.endDate
+        );
+
+        setAllCampaigns(sortedArrayOfEvents);
       } catch (getAllCampaignsError) {
         console.log('getAllCampaignsError', getAllCampaignsError);
       }
-    }, [contract]
-  )
+    }
 
-  const getCampaignDetails = useCallback(
-    async (proposalId: number) => {
-      try {
-        const campaignInfo = await contract?.getProposalDetails(proposalId)
-        return campaignInfo;
-      } catch (getCampaignDetailsError) {
-        console.log('getCampaignDetailsError', getCampaignDetailsError);
-      }
-    }, [contract]
-  )
-
-  const getCampaignsByUser = useCallback(
-    async () => {
-      try {
-        const campaignInfo = await contract?.getProposalsByUser(account)
-        return campaignInfo;
-      } catch (getMyCampaignsError) {
-        console.log('getMyCampaignsError', getMyCampaignsError);
-      }
-    }, [account, contract]
-  )
-
-  const getSuccessfulCampaignsCount = useCallback(
-    async () => {
-      try {
-        const campaignInfo = await contract?.getSuccessfulProposalsCount()
-        return campaignInfo;
-      } catch (getSuccessfulCampaignsCountError) {
-        console.log('getSuccessfulCampaignsCountError', getSuccessfulCampaignsCountError);
-      }
-    }, [contract]
-  )
-
-  const getTotalFundsRaised = useCallback(
-    async () => {
-      try {
-        const campaignInfo = await contract?.getTotalFundsRaised()
-        return campaignInfo;
-      } catch (getTotalFundsRaisedError) {
-        console.log('getTotalFundsRaisedError', getTotalFundsRaisedError);
-      }
-    }, [contract]
-  )
-
-  const getUserContribution = useCallback(
-    async (proposalId: number) => {
-      try {
-        const campaignInfo = await contract?.getUserContribution(proposalId, account)
-        return campaignInfo;
-      } catch (getUserContributionError) {
-        console.log('getUserContributionError', getUserContributionError);
-      }
-    }, [account, contract]
-  )
-
-  return {
-    getAllCampaigns,
-    getCampaignDetails,
-    getCampaignsByUser,
-    getSuccessfulCampaignsCount,
-    getTotalFundsRaised,
-    getUserContribution
-  }
+    fetchAllCampaigns()
+  }, [contract])
+  
+  return !allCampaigns?.length ? loadingCampaigns : allCampaigns;
 }
 
-export const useGetAllCampaigns = () => {
+export const useActiveCampaigns = () => {
   const contract = useAppContract()
   const [activeCampaigns, setActiveCampaigns] = useState<CampaignType[]>([])
-  const [loadingEvent, setLoadingEvent] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => ({
-    id: index + 1,
-    creator: "",
-    description: "",
-    endDate: 0,
-    goal: 0,
-    imageLink: "",
-    isCancelled: false,
-    isClaimed: false,
-    preferredToken: "",
-    title: "",
-    totalRaised: 0,
-  })))
+  const [loadingCampaigns, setLoadingCampaigns] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => (placeholderCampaign)))
 
   useEffect(() => {
     const fetchActiveCampaigns = async () => {
       try {
-        const proposals = await contract?.getAllProposals()
-        const filteredActiveEvents = proposals.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
+        const campaigns = await contract?.getActiveCampaigns()
+        const filteredActiveEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
 
-        if (filteredActiveEvents.length === 0) {
-          setLoadingEvent(prev => (prev.length > 0 ? [] : prev));
+        if (filteredActiveEvents?.length === 0) {
+          setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
         }
 
-        const sortedArrayOfEvents = [...filteredActiveEvents].sort(
+        const sortedArrayOfEvents = [...filteredActiveEvents]?.sort(
           (currentEvent, nextEvent) => currentEvent?.endDate - nextEvent?.endDate
         );
 
         setActiveCampaigns(sortedArrayOfEvents);
-      } catch (getAllCampaignsError) {
-        console.log('getAllCampaignsError', getAllCampaignsError);
+      } catch (getActiveCampaignsError) {
+        console.log('getActiveCampaignsError', getActiveCampaignsError);
       }
     }
 
     fetchActiveCampaigns()
   }, [contract])
   
-  return !activeCampaigns?.length ? loadingEvent : activeCampaigns;
+  return !activeCampaigns?.length ? loadingCampaigns : activeCampaigns;
+}
+
+export const useEndedCampaigns = () => {
+  const contract = useAppContract()
+  const [endedCampaigns, setEndedCampaigns] = useState<CampaignType[]>([])
+  const [loadingCampaigns, setLoadingCampaigns] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => (placeholderCampaign)))
+
+  useEffect(() => {
+    const fetchEndedCampaigns = async () => {
+      try {
+        const campaigns = await contract?.getEndedCampaigns()
+        const filteredEndedEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
+
+        if (filteredEndedEvents?.length === 0) {
+          setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
+        }
+
+        const sortedArrayOfEvents = [...filteredEndedEvents]?.sort(
+          (currentEvent, nextEvent) => currentEvent?.endDate - nextEvent?.endDate
+        );
+
+        setEndedCampaigns(sortedArrayOfEvents);
+      } catch (getEndedCampaignsError) {
+        console.log('getEndedCampaignsError', getEndedCampaignsError);
+      }
+    }
+
+    fetchEndedCampaigns()
+  }, [contract])
+  
+  return !endedCampaigns?.length ? loadingCampaigns : endedCampaigns;
+}
+
+export const useMyCampaigns = () => {
+  const { account } = useWeb3React()
+  const contract = useAppContract()
+  const [myCampaigns, setMyCampaigns] = useState<CampaignType[]>([])
+  const [loadingCampaigns, setLoadingCampaigns] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => (placeholderCampaign)))
+
+  useEffect(() => {
+    const fetchMyCampaigns = async () => {
+      try {
+        const campaigns = await contract?.getCampaignsByUser(account)
+        const filteredMyEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
+
+        if (filteredMyEvents?.length === 0) {
+          setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
+        }
+
+        const sortedArrayOfEvents = [...filteredMyEvents]?.sort(
+          (currentEvent, nextEvent) => currentEvent?.endDate - nextEvent?.endDate
+        );
+
+        setMyCampaigns(sortedArrayOfEvents);
+      } catch (getMyCampaignsError) {
+        console.log('getMyCampaignsError', getMyCampaignsError);
+      }
+    }
+
+    fetchMyCampaigns()
+  }, [account, contract])
+  
+  return !myCampaigns?.length ? loadingCampaigns : myCampaigns;
+}
+
+export const useCampaignDetails = (proposalId: number) => {
+  const { account } = useWeb3React()
+  const contract = useAppContract()
+  const [myCampaigns, setMyCampaigns] = useState<CampaignType>()
+  const [loadingCampaigns, setLoadingCampaigns] = useState<any>(placeholderCampaign)
+
+  useEffect(() => {
+    const fetchMyCampaigns = async () => {
+      try {
+        const campaignInfo = await contract?.getCampaignDetails(proposalId)
+
+        if (campaignInfo) {
+          setLoadingCampaigns({});
+        }
+
+        console.log('campaignInfo', campaignInfo);
+        setMyCampaigns(campaignInfo);
+      } catch (getCampaignDetailsError) {
+        console.log('getCampaignDetailsError', getCampaignDetailsError);
+      }
+    }
+
+    fetchMyCampaigns()
+  }, [account, contract, proposalId])
+  
+  return !myCampaigns ? loadingCampaigns : myCampaigns;
 }
