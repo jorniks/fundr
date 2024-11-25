@@ -1,8 +1,7 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Link from 'next/link'
-import { useLocation } from "react-router-dom";
 import React from 'react'
 import WalletButton from './WalletButtons'
 import Image from 'next/image'
