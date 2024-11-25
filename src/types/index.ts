@@ -7,6 +7,7 @@ export type CampaignType = {
   id: number;
   creator: string;
   description: string;
+  createdAt: number;
   endDate: number;
   goal: number;
   imageLink: string;
@@ -15,6 +16,13 @@ export type CampaignType = {
   preferredToken: string;
   title: string;
   totalRaised: number;
+  contribution: Contribution[];
+}
+
+export type Contribution = {
+  contributor: string;
+  amount: number;
+  timestamp: number;
 }
 
 export type CountdownTimerProps = {
