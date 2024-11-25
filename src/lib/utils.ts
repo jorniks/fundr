@@ -39,3 +39,17 @@ export const hasErrorInput = [
   // ring color
   "ring-red-200 dark:ring-red-700/30",
 ]
+
+export const placeholderCampaign = {
+  id: 1,
+  creator: "",
+  description: "",
+  endDate: 0,
+  goal: 0,
+  imageLink: "",
+  status: 1,
+  tokenDecimals: 6,
+  preferredToken: "",
+  title: "",
+  totalRaised: 0,
+}
