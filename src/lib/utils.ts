@@ -1,3 +1,4 @@
+import { CampaignType } from "@/types"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -40,10 +41,11 @@ export const hasErrorInput = [
   "ring-red-200 dark:ring-red-700/30",
 ]
 
-export const placeholderCampaign = {
+export const placeholderCampaign: CampaignType = {
   id: 1,
   creator: "",
   description: "",
+  createdAt: 0,
   endDate: 0,
   goal: 0,
   imageLink: "",
