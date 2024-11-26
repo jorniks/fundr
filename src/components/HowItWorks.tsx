@@ -14,7 +14,7 @@ const HowItWorksComponent = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 lg:items-center">
         <div className="aspect-w-16 aspect-h-9 lg:aspect-none">
-          <Image width={100} height={100} className="w-full object-cover object-center rounded-xl lg:h-[600px]" alt="Campaign Creation"
+          <Image width={1000} height={1000} className="w-full object-cover object-center rounded-xl lg:h-[600px]" alt="Campaign Creation"
             src="https://media.istockphoto.com/id/874231466/photo/young-adult-woman-walking-up-the-stairs-with-sun-sport-background.jpg?s=612x612&w=0&k=20&c=6d2vtrEvMhXNSh8TFR5hVhW_A2ZKjvOhWQhg-yLW_wk="
           />
         </div>
