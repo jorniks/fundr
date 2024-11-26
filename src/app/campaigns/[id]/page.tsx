@@ -89,7 +89,9 @@ const CampaignDetail = () => {
 
               <div className="grid sm:grid-cols-2 gap-y-4">
                 <div className="flex items-center gap-x-3">
-                  <Image width={500} height={500} className="size-8 rounded-full" alt="User Avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fit=facearea&facepad=2&w=320&h=320" />
+                  <div className="bg-spray-700 shadow-white shadow-inner rounded-full flex items-center justify-center size-8">
+                    <i className="bi bi-person-bounding-box"></i>
+                  </div>
 
                   <Link href={`${CHAIN_INFO[defaultChainId].explorer}/${campaignInfo?.creator}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-x-3 border-b border-dotted">Created by {shortenAddress(campaignInfo?.creator)}</Link>
                 </div>
