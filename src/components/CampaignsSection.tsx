@@ -1,11 +1,11 @@
 "use client"
 
-import { useAllCampaigns } from "@/hooks/read/useContractInfo"
+import { useActiveCampaigns } from "@/hooks/read/useContractInfo"
 import CampaignCard from "./CampaignCard"
 
 
 const CampaignsSection = () => {
-  const campaigns = useAllCampaigns()
+  const campaigns = useActiveCampaigns()
 
   return (
     campaigns &&
