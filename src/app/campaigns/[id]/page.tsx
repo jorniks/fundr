@@ -6,7 +6,6 @@ import { ApprovalType, CampaignType } from '@/types'
 import Image from "next/image"
 import Link from "next/link";
 import { useState } from "react";
-import { toast } from "react-toastify";
 
 
 import { formatNumberScale, shortenAddress } from '@/functions/format'
@@ -30,7 +29,7 @@ const CampaignDetail = () => {
   const campaignInfo: CampaignType = useCampaignDetails(Number(id));
   const tokenInfo = retrievePreferredToken(campaignInfo?.preferredToken)
   const targetAmount = convertToDecimalValue(String(campaignInfo?.goal), campaignInfo?.tokenDecimals)
-  const amountRaised = convertToDecimalValue(String(campaignInfo?.totalRaised), campaignInfo?.tokenDecimals)
+  const amountRaised = Number(BigInt(campaignInfo?.totalRaised))
   const percentageGotten = Math.round((amountRaised * 100) / targetAmount)
   const [amountToContribute, setAmountToContribute] = useState<string>("")
   const [approvalState, approveSpend] = useApprovalState(amountToContribute, tokenInfo)
@@ -45,14 +44,14 @@ const CampaignDetail = () => {
           <aside className="lg:col-span-4 mt-10 lg:mt-0 space-y-4">
             <h1 className="">{campaignInfo?.title}</h1>
 
-            <Image width={100} height={30} className="w-full object-cover rounded-xl h-96" src={campaignInfo?.imageLink} alt="Hero Image" />
+            <Image width={1000} height={1000} className="w-full object-cover object-center rounded-xl h-[32rem]" src={campaignInfo?.imageLink} alt={`${campaignInfo?.title} image`} />
 
             <div className="space-y-6">
               <article className="mt-3 text-base text-gray-300">{campaignInfo?.description}</article>
 
               <div className="grid sm:grid-cols-2 gap-y-4">
                 <div className="flex items-center gap-x-3">
-                  <Image width={100} height={100} className="size-8 rounded-full" alt="User Avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fit=facearea&facepad=2&w=320&h=320" />
+                  <Image width={500} height={500} className="size-8 rounded-full" alt="User Avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fit=facearea&facepad=2&w=320&h=320" />
 
                   <Link href={`${CHAIN_INFO[defaultChainId].explorer}/${campaignInfo?.creator}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-x-3 border-b border-dotted">Created by {shortenAddress(campaignInfo?.creator)}</Link>
                 </div>
@@ -83,14 +82,23 @@ const CampaignDetail = () => {
             </div>
 
             <div className="space-y-4">
-              <input type="number" className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount ..." />
+              <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount ..." />
               
               {!account ?
                 <NotConnectedWalletButton />
+              :
+                !amountToContribute ?
+                  <Button className="w-full rounded text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
                 : approvalState === ApprovalType.UNKNOWN || approvalState === ApprovalType.NOT_APPROVED ?
-                  <Button className="w-full rounded text-base py-3 btn spray font-medium" onClick={approveSpend}>Approve</Button>
+                    <Button className="w-full rounded text-base py-3 btn spray font-medium" onClick={approveSpend}>Approve</Button>
                   :
-                  <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => contributeToCampaign(1, amountToContribute, tokenInfo?.decimal)}>Donate</Button>
+                    <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => {
+                      contributeToCampaign(campaignInfo?.id, amountToContribute, tokenInfo?.decimal).then(response => {
+                        if (response === true) {
+                          window.location.reload()
+                        }
+                      })
+                    }}>Donate</Button>
               }
             </div>
           </aside>
