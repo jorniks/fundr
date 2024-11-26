@@ -12,13 +12,13 @@ import {
 } from "@/components/ui/select"
 import { useWeb3React } from "@web3-react/core";
 import NotConnectedWalletButton from "@/components/WalletButtons/NotConnected";
-import { useContractWrite } from "@/hooks/write/useContractWrite";
+import { useNewCampaign } from "@/hooks/write/useNewCampaign";
 import { retrievePreferredToken } from "@/functions/misc-functions";
 
 
 const CreateCampaign = () => {
   const { account } = useWeb3React()
-  const { createNewCampaign } = useContractWrite()
+  const createNewCampaign = useNewCampaign()
   const [formValues, setFormValues] = useState({
     title: "",
     imageLink: "",
