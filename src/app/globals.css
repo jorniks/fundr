@@ -68,11 +68,11 @@
   }
 
   .lime {
-    @apply bg-lime-600 hover:bg-lime-700 text-white text-sm font-medium
+    @apply bg-lime-500 hover:bg-lime-600 text-white text-sm font-medium
   }
 
   .spray {
-    @apply hover:bg-spray-600 bg-spray-700 text-white
+    @apply hover:bg-spray-500 bg-spray-600 text-white
   }
 
   .spray-dark {
@@ -80,6 +80,6 @@
   }
 
   .chestnut {
-    @apply hover:bg-chestnut-600 bg-chestnut-700 text-white
+    @apply hover:bg-chestnut-500 bg-chestnut-600 text-white
   }
 }
