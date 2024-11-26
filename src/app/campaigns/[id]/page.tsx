@@ -2,38 +2,70 @@
 
 import { Button } from "@/components/button";
 import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
-import { ApprovalType, CampaignType } from '@/types'
+import { CampaignType } from '@/types'
 import Image from "next/image"
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 
 import { formatNumberScale, shortenAddress } from '@/functions/format'
 import CountdownTimer from '@/components/ui/count-down-timer'
 import { Progress } from '@/components/ui/progress'
 import { convertToDecimalValue, retrievePreferredToken } from '@/functions/misc-functions'
-import { useApprovalState } from '@/hooks/useApproveCallback'
 import { useWeb3React } from '@web3-react/core'
 import NotConnectedWalletButton from '@/components/WalletButtons/NotConnected'
-import { useContractWrite } from '@/hooks/write/useContractWrite'
 import LoadingCampaignDetails from "@/components/LoadingCampaignDetails";
 import { usePathname } from "next/navigation";
-import { useCampaignDetails } from "@/hooks/read/useContractInfo";
+import { useContractInfo } from "@/hooks/read/useContractInfo";
 import moment from "moment";
+import { useContribute } from "@/hooks/write/useContribute";
+import { useRecoilState } from "recoil";
+import { contributionAmount, tokenInfoObj } from "@/app/state/atoms/atom";
+import { useAppContract } from "@/hooks/services/useContract";
 
 
 const CampaignDetail = () => {
   const id = usePathname().replace('/campaigns/', '')
+  const contract = useAppContract()
   const { account } = useWeb3React()
-  const { contributeToCampaign } = useContractWrite()
-  const campaignInfo: CampaignType = useCampaignDetails(Number(id));
-  const tokenInfo = retrievePreferredToken(campaignInfo?.preferredToken)
-  const targetAmount = convertToDecimalValue(String(campaignInfo?.goal), campaignInfo?.tokenDecimals)
-  const amountRaised = Number(BigInt(campaignInfo?.totalRaised))
-  const percentageGotten = Math.round((amountRaised * 100) / targetAmount)
-  const [amountToContribute, setAmountToContribute] = useState<string>("")
-  const [approvalState, approveSpend] = useApprovalState(amountToContribute, tokenInfo)
-  const creationDate = moment.unix(Number(BigInt(campaignInfo?.createdAt))).format("MMM DD, YYYY")
+  const [tokenInfo, setTokenInfo ] = useRecoilState(tokenInfoObj)
+  const [amountToContribute, setAmountToContribute] = useRecoilState(contributionAmount)
+  const getCampaignDetails = useContractInfo()
+  const contributeToCampaign = useContribute(tokenInfo)
+
+  const [targetAmount, setTargetAmount] = useState<number>(0)
+  const [amountRaised, setAmountRaised] = useState<number>(0)
+  const [percentageGotten, setPercentageGotten] = useState<number>(0)
+  const [creationDate, setCreationDate] = useState<string>('')
+  const [campaignInfo, setCampaignInfo] = useState<CampaignType>()
+
+  const loadData = useCallback(
+    () => {
+      getCampaignDetails(Number(id)).then(response => {
+        if (response?.title) {
+          setTokenInfo(retrievePreferredToken(response.preferredToken))
+          const goal = convertToDecimalValue(String(response?.goal), response?.tokenDecimals)
+          const raised = Number(BigInt(response?.totalRaised))
+          setTargetAmount(goal)
+          setAmountRaised(raised)
+          setPercentageGotten(Math.round((raised * 100) / goal))
+          setCreationDate(moment.unix(Number(BigInt(response?.createdAt))).format("MMM DD, YYYY"))
+          setCampaignInfo(response)
+          setAmountToContribute('')
+        }
+      })
+    }, [getCampaignDetails, id, setAmountToContribute, setTokenInfo]
+  )
+
+  useEffect(() => {
+    loadData()
+
+    contract?.on("ContributionMade", loadData)
+  
+    return () => {
+      contract?.removeAllListeners()
+    }
+  }, [contract, loadData])
 
   return (
     <main className="container space-y-14 py-40">
@@ -82,23 +114,15 @@ const CampaignDetail = () => {
             </div>
 
             <div className="space-y-4">
-              <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount ..." />
+              <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount to contribute" />
               
               {!account ?
                 <NotConnectedWalletButton />
               :
                 !amountToContribute ?
                   <Button className="w-full rounded text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
-                : approvalState === ApprovalType.UNKNOWN || approvalState === ApprovalType.NOT_APPROVED ?
-                    <Button className="w-full rounded text-base py-3 btn spray font-medium" onClick={approveSpend}>Approve</Button>
-                  :
-                    <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => {
-                      contributeToCampaign(campaignInfo?.id, amountToContribute, tokenInfo?.decimal).then(response => {
-                        if (response === true) {
-                          window.location.reload()
-                        }
-                      })
-                    }}>Donate</Button>
+                :
+                  <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => {contributeToCampaign(campaignInfo?.id,   tokenInfo?.decimal)}}>Donate</Button>
               }
             </div>
           </aside>
