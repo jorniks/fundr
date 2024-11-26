@@ -1,7 +1,7 @@
 "use client"
 
 import CampaignCard from '@/components/CampaignCard';
-import { useMyCampaigns } from '@/hooks/read/useContractInfo'
+import { useMyCampaigns } from '@/hooks/read/useCampaigns'
 import Link from 'next/link'
 
 const MyCampaigns = () => {

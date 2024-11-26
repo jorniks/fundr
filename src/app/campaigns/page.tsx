@@ -1,10 +1,10 @@
 'use client'
 
 import CampaignCard from '@/components/CampaignCard'
-import { useAllCampaigns } from '@/hooks/read/useContractInfo'
+import { useActiveCampaigns } from '@/hooks/read/useCampaigns'
 
 const Campaigns = () => {
-  const allCampaigns = useAllCampaigns()
+  const allCampaigns = useActiveCampaigns()
   
   
   return (

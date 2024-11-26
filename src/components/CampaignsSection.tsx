@@ -1,6 +1,6 @@
 "use client"
 
-import { useActiveCampaigns } from "@/hooks/read/useContractInfo"
+import { useActiveCampaigns } from "@/hooks/read/useCampaigns"
 import CampaignCard from "./CampaignCard"
 
 

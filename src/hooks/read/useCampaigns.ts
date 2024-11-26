@@ -12,7 +12,7 @@ export const useActiveCampaigns = () => {
   useEffect(() => {
     const fetchActiveCampaigns = async () => {
       try {
-        const campaigns = await contract?.getActiveCampaigns()
+        const campaigns = await contract?.getAllCampaigns()
         const filteredActiveEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
 
         if (filteredActiveEvents?.length === 0) {
@@ -43,8 +43,8 @@ export const useEndedCampaigns = () => {
   useEffect(() => {
     const fetchEndedCampaigns = async () => {
       try {
-        const campaigns = await contract?.getEndedCampaigns()
-        const filteredEndedEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
+        const campaigns = await contract?.getAllCampaigns()
+        const filteredEndedEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 < Date.now());
 
         if (filteredEndedEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
