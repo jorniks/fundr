@@ -16,7 +16,7 @@ import { useWeb3React } from '@web3-react/core'
 import NotConnectedWalletButton from '@/components/WalletButtons/NotConnected'
 import LoadingCampaignDetails from "@/components/LoadingCampaignDetails";
 import { usePathname } from "next/navigation";
-import { useContractInfo } from "@/hooks/read/useContractInfo";
+import { useCampaignDetails } from "@/hooks/read/useCampaignDetails";
 import moment from "moment";
 import { useContribute } from "@/hooks/write/useContribute";
 import { useRecoilState } from "recoil";
@@ -30,7 +30,7 @@ const CampaignDetail = () => {
   const { account } = useWeb3React()
   const [tokenInfo, setTokenInfo ] = useRecoilState(tokenInfoObj)
   const [amountToContribute, setAmountToContribute] = useRecoilState(contributionAmount)
-  const getCampaignDetails = useContractInfo()
+  const getCampaignDetails = useCampaignDetails()
   const contributeToCampaign = useContribute(tokenInfo)
 
   const [targetAmount, setTargetAmount] = useState<number>(0)
