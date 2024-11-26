@@ -64,11 +64,11 @@
   }
 
   .btn {
-    @apply outline-none shadow-md transition-all duration-500 rounded-full text-sm hover:shadow-lg font-medium
+    @apply outline-none shadow-md transition-all duration-500 rounded-full hover:shadow-lg font-medium
   }
 
   .lime {
-    @apply bg-lime-500 hover:bg-lime-600 text-white text-sm font-medium
+    @apply bg-lime-600 hover:bg-lime-700 text-white font-medium
   }
 
   .spray {
