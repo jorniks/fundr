@@ -36,20 +36,20 @@ const NavBar = () => {
   
   return (
     <nav className="flex items-center justify-between container px-1 md:px-3 py-3 sm:px-5 fixed top-3 inset-x-0 z-50 rounded-full backdrop-blur-md bg-white/20">
-      <Link href={"/"} className="flex items-center gap-x-3 text-lg md:text-xl md:font-semibold text-gray-50 hover:text-lime-400 transition-colors duration-300">
-        <Image width={1000} height={1000} src="/fundr.png" alt="fundr." className="w-auto h-6 md:h-8" />
-      </Link>
+      <div className="ps-3 flex items-center gap-x-10">
+        <Link href={"/"} className=""><Image width={1000} height={1000} src="/fundr.png" alt="fundr." className="w-auto h-6 md:h-8" /></Link>
+        
+        <div className="space-x-4 hidden sm:block">
+          {NavbarLinks.map((link, index) => (
+            <Link key={index} href={`${link.href}`} className={`hover:text-lime-400 transition-colors tracking-wide duration-300 ${location === link.href && "text-lime-400"}`}>
+              {link.name}
+            </Link>
+          ))}
+        </div>
+      </div>
 
       {/* Desktop Menu */}
-      <div className="hidden md:flex items-center space-x-8">
-        {NavbarLinks.map((link, index) => (
-          <Link key={index} href={`${link.href}`} className={`text-sm font-medium  hover:text-lime-400 transition-colors duration-300 ${location === link.href ? "text-lime-400" : "text-gray-50"}`}>
-            {link.name}
-          </Link>
-        ))}
-
-        <WalletButton />
-      </div>
+      <WalletButton />
     </nav>
   )
 }
