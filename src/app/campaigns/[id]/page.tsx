@@ -93,7 +93,7 @@ const CampaignDetail = () => {
                     <i className="bi bi-person-bounding-box"></i>
                   </div>
 
-                  <Link href={`${CHAIN_INFO[defaultChainId].explorer}/${campaignInfo?.creator}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-x-3 border-b border-dotted">Created by {shortenAddress(campaignInfo?.creator)}</Link>
+                  <Link href={`${CHAIN_INFO[defaultChainId].explorer}/address/${campaignInfo?.creator}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-x-3 border-b border-dotted">Created by {shortenAddress(campaignInfo?.creator)}</Link>
                 </div>
 
                 <div className="flex items-center gap-2">
