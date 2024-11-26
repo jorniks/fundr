@@ -4,20 +4,21 @@ import { convertToDecimalValue, extractErrorMessage } from "@/functions/misc-fun
 import { useWeb3React } from '@web3-react/core'
 import { formatToBigInt } from "@/functions/format";
 import { toast as customToast } from "@/components/ui/use-toast"
-import { loadingState } from "@/app/state/atoms/atom";
-import { useSetRecoilState } from "recoil";
+import { contributionAmount, loadingState } from "@/app/state/atoms/atom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { FUNDR_CONTRACT } from '@/constants/addresses/fundr-contract'
 import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
 import { toast } from "react-toastify";
 import { ApprovalType } from "@/types";
 
-export function useApprovalState(amountToApprove: string, tokenInfo: any): [ApprovalType, () => Promise<void>] {
+export function useApprovalState(tokenInfo: any): [ApprovalType, () => Promise<void>] {
   const { account, chainId } = useWeb3React();
   const { address: tokenAddress, decimal: tokenDecimal } = tokenInfo
   const tokenContract = useTokenContract(tokenAddress)
   const [currentAllowance, setCurrentAllowance] = useState(0)
   const explorerURL = chainId && CHAIN_INFO[defaultChainId].explorer
   const setIsLoading = useSetRecoilState(loadingState)
+  const amountToApprove = useRecoilValue(contributionAmount)
   
   useEffect(() => {
     async function getCurrentAllowance() {
