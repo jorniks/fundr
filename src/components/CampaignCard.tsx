@@ -22,7 +22,9 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
         <Image width={1000} height={55} className="w-full object-cover rounded-md h-56" alt={`${campaign?.title} campaign image`} src={campaign?.imageLink} />
 
         <div className="mt-2 flex items-center gap-x-3">
-          <Image width={500} height={500} className="size-8 rounded-full" alt="User Avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?fit=facearea&facepad=2&w=320&h=320" />
+          <div className="bg-spray-700 shadow-white shadow-inner rounded-full flex items-center justify-center size-7">
+            <i className="bi bi-person-bounding-box"></i>
+          </div>
           <h5 className="text-sm text-gray-300">{shortenAddress(campaign?.creator)}</h5>
         </div>
 
