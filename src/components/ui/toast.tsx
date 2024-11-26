@@ -11,7 +11,6 @@ import {
 } from "@remixicon/react"
 
 import { cx } from "@/lib/utils"
-import { Button } from "@/components/button";
 
 const ToastProvider = ToastPrimitives.Provider
 ToastProvider.displayName = "ToastProvider"
@@ -181,7 +180,7 @@ const Toast = React.forwardRef<
         <div className="flex flex-col">
           {!disableDismiss && (
             <ToastPrimitives.Close>
-              <Button type="button" className="mt-[10px] mr-[10px]">
+              <button className="mt-[10px] mr-[10px]">
                 <svg
                   className="fill-zinc-300"
                   xmlns="http://www.w3.org/2000/svg"
@@ -191,7 +190,7 @@ const Toast = React.forwardRef<
                 >
                   <path d="M480-405.912 293.044-218.956Q278.087-203.999 256-203.999q-22.087 0-37.044-14.957-14.957-14.957-14.957-37.044 0-22.087 14.957-37.044L405.912-480 218.956-666.956Q203.999-681.913 203.999-704q0-22.087 14.957-37.044 14.957-14.957 37.044-14.957 22.087 0 37.044 14.957L480-554.088l186.956-186.956q14.957-14.957 37.044-14.957 22.087 0 37.044 14.957 14.957 14.957 14.957 37.044 0 22.087-14.957 37.044L554.088-480l186.956 186.956q14.957 14.957 14.957 37.044 0 22.087-14.957 37.044-14.957 14.957-37.044 14.957-22.087 0-37.044-14.957L480-405.912Z" />
                 </svg>
-              </Button>
+              </button>
             </ToastPrimitives.Close>
           )}
         </div>
