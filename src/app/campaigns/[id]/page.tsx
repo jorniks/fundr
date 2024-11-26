@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/button";
 import { CHAIN_INFO, defaultChainId } from "@/lib/services/chain-config";
-import { CampaignType } from '@/types'
+import { CampaignStatus, CampaignType } from '@/types'
 import Image from "next/image"
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -22,6 +22,9 @@ import { useContribute } from "@/hooks/write/useContribute";
 import { useRecoilState } from "recoil";
 import { contributionAmount, tokenInfoObj } from "@/app/state/atoms/atom";
 import { useAppContract } from "@/hooks/services/useContract";
+import { useClaimFunds } from "@/hooks/write/useClaimFunds";
+import { useWithdrawContribution } from "@/hooks/write/useWithdrawContribution";
+import { useCancelCampaign } from "@/hooks/write/useCancelCampaign";
 
 
 const CampaignDetail = () => {
@@ -32,6 +35,9 @@ const CampaignDetail = () => {
   const [amountToContribute, setAmountToContribute] = useRecoilState(contributionAmount)
   const getCampaignDetails = useCampaignDetails()
   const contributeToCampaign = useContribute(tokenInfo)
+  const claimFunds = useClaimFunds()
+  const withdrawContribution = useWithdrawContribution()
+  const cancelCampaign = useCancelCampaign()
 
   const [targetAmount, setTargetAmount] = useState<number>(0)
   const [amountRaised, setAmountRaised] = useState<number>(0)
@@ -113,18 +119,34 @@ const CampaignDetail = () => {
               <CountdownTimer timestamp={Number(BigInt(campaignInfo?.endDate))} clockOnly={false} />
             </div>
 
-            <div className="space-y-4">
-              <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount to contribute" />
-              
-              {!account ?
-                <NotConnectedWalletButton />
-              :
-                !amountToContribute ?
-                  <Button className="w-full rounded text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
+            {(campaignInfo?.creator !== account) ?
+              <div className="">
+                {(CampaignStatus[campaignInfo?.status] === "Cancelled") ?
+                  <Button className="btn lime w-full py-3" onClick={() => withdrawContribution(campaignInfo?.id)}>Withdraw Contribution</Button>
                 :
-                  <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => {contributeToCampaign(campaignInfo?.id,   tokenInfo?.decimal)}}>Donate</Button>
-              }
-            </div>
+                  <div className="space-y-4">
+                    <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount to contribute" />
+                    
+                    {!account ?
+                      <NotConnectedWalletButton />
+                    :
+                      !amountToContribute ?
+                        <Button className="w-full rounded text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
+                      :
+                        <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => {contributeToCampaign(campaignInfo?.id,   tokenInfo?.decimal)}}>Donate</Button>
+                    }
+                  </div>
+                }
+              </div>
+            :
+              <div className="">
+                {CampaignStatus[campaignInfo?.status] === "Ended" ?
+                  <Button className="btn lime w-full py-3 rounded" onClick={() => claimFunds(campaignInfo?.id)}>Claim Funds</Button>
+                :
+                  <Button className="btn lime w-full py-3 rounded" onClick={() => cancelCampaign(campaignInfo?.id)}>Cancel Campaign</Button>
+                }
+              </div>
+            }
           </aside>
         </section>
       }

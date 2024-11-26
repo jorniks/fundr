@@ -11,11 +11,6 @@ import { formatToBigInt } from "@/functions/format"
 import { useApprovalState } from "../useApproveCallback"
 import { ApprovalType } from "@/types"
 
-/*
-cancelCampaign
-claimFunds
-withdrawContribution
-*/
 
 export const useContribute = (tokenInfo: any) => {
   const { account, chainId } = useWeb3React()
