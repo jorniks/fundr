@@ -8,8 +8,7 @@ const Footer = () => {
           className="flex justify-center items-center space-x-3 text-xl font-semibold text-gray-50 hover:text-lime-400 transition-colors duration-300 pb-5"
           href="/"
         >
-          <Image width={1000} height={1000} src="/fundrLogo.png" alt="Logo" className="w-8 h-8" />
-          <span>fundr</span>
+          <Image width={1000} height={1000} src="/fundr.png" alt="fundr." className="w-auto h-8" />
         </a>
 
         <div className="mt-3">
