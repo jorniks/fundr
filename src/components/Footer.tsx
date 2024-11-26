@@ -13,7 +13,7 @@ const Footer = () => {
       </div>
 
       <div className="space-x-6">
-        <a href="https://telegram.org" className="hover:text-lime-500 duration-200 outline-none" target="_blank" rel="noreferrer">
+        <a href="https://t.me/jorniks" className="hover:text-lime-500 duration-200 outline-none" target="_blank" rel="noreferrer">
           <i className="text-2xl bi bi-telegram"></i>
         </a>
 
