@@ -1,30 +1,37 @@
 'use client'
 
-import CampaignCard from '@/components/CampaignCard'
-import { useActiveCampaigns } from '@/hooks/read/useCampaigns'
+import ActiveCampaigns from '@/components/pages/ActiveCampaigns'
+import EndedCampaigns from '@/components/pages/EndedCampaigns'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Suspense } from 'react'
 
 const Campaigns = () => {
-  const allCampaigns = useActiveCampaigns()
-  
   
   return (
-    <main className="container space-y-14 py-40">
-      <aside className="max-w-3xl mx-auto text-center space-y-2 md:space-y-4">
-        <h2 className="">Explore Live Campaigns</h2>
+    <main className="container space-y-14 py-36">
+      <Tabs defaultValue='active'>
+        <aside className="space-y-2 mb-4">
+          <h2 className="text-3xl">Explore Live Campaigns</h2>
+          <article className="">Explore a wide range of live projects where your contribution can make a real difference.</article>
+        </aside>
 
-        <article className="">
-          Find and Back Campaigns That Need Your Help Now—Explore a wide range of live projects where your contribution can make a real difference.
-        </article>
-      </aside>
+        <TabsList className="shadow rounded-md divide-x border border-white overflow-hidden mb-10">
+          <TabsTrigger className="px-8" value="active">Active</TabsTrigger>
+          <TabsTrigger className="px-8" value="ended">Ended</TabsTrigger>
+        </TabsList>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-y-10 sm:gap-x-6">
-        {allCampaigns?.map((campaign, index) => (
-          <CampaignCard
-            key={index}
-            campaign={campaign}
-          />
-        ))}
-      </div>
+        <TabsContent value='active' className='px-0'>
+          <Suspense>
+            <ActiveCampaigns />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value='ended' className='px-0'>
+          <Suspense>
+            <EndedCampaigns />
+          </Suspense>
+        </TabsContent>
+      </Tabs>
     </main>
   )
 }

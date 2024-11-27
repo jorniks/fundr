@@ -43,8 +43,8 @@ export const useEndedCampaigns = () => {
   useEffect(() => {
     const fetchEndedCampaigns = async () => {
       try {
-        const campaigns = await contract?.getAllCampaigns()
-        const filteredEndedEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 < Date.now());
+        const campaigns: CampaignType[] = await contract?.getAllCampaigns()
+        const filteredEndedEvents = campaigns?.filter(({ endDate }) => endDate * 1000 < Date.now());
 
         if (filteredEndedEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
