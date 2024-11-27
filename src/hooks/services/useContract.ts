@@ -1,4 +1,3 @@
-import GetContract from './contract/getContract';
 import { Contract } from '@ethersproject/contracts';
 import ERC20_TOKEN_ABI from '@/constants/abis/token.json';
 import FUNDR_ABI from "@/constants/abis/fundr.json"
@@ -8,6 +7,7 @@ import { ZeroAddress } from 'ethers';
 import { useWeb3React } from '@web3-react/core';
 import { getContract } from './contract/contracts';
 import { useMemo } from 'react';
+import { getOfflineContract } from './contract/offlineContract';
 
 export const useWeb3ReactContract = (contractAddress: string, contractABI: any): Contract | null => {
   const { account, provider } = useWeb3React();
@@ -25,7 +25,7 @@ export const useWeb3ReactContract = (contractAddress: string, contractABI: any):
 export const useStandardEthersContract = (contractAddress: string, contractABI: any): StandardEthersContract | null => {
   if (!contractAddress || contractAddress === ZeroAddress || !contractABI) return null;
 
-  return GetContract(contractAddress, contractABI);
+  return getOfflineContract(contractAddress, contractABI);
 };
 
 export const useContract = (contractAddress: string, contractABI: any): Contract | StandardEthersContract | null => {
