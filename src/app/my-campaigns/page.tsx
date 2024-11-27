@@ -1,44 +1,56 @@
 "use client"
 
-import CampaignCard from '@/components/CampaignCard';
-import { useMyCampaigns } from '@/hooks/read/useCampaigns'
+import MyActiveCampaigns from '@/components/pages/MyActiveCampaigns';
+import MyEndedCampaigns from '@/components/pages/MyEndedCampaigns';
+import MyFundedCampaigns from '@/components/pages/MyFundedCampaigns';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Link from 'next/link'
+import { Suspense } from 'react';
 
 const MyCampaigns = () => {
-  const myCampaigns = useMyCampaigns()
 
   
   return (
-    <main className="container py-40 min-h-screen space-y-14">
-      <div className="md:flex justify-between items-start">
-        <div className='space-y-1.5'>
-          <h2 className="text-2xl">My Campaigns</h2>
-          <article className="">Here you can manage and track your campaigns.</article>
+    <main className="container py-36 min-h-screen space-y-14">
+      <Tabs defaultValue='active'>
+        <div className="md:flex justify-between items-start mb-4">
+          <div className='space-y-2'>
+            <h2 className="text-3xl">My Campaigns</h2>
+            <article className="">Here you can manage and track your campaigns.</article>
+          </div>
+
+          <Link href={"/create-campaign"} className="inline-flex items-center gap-x-3 btn lime p-1.5 ps-4">
+            Create new campaign
+            <span className="py-2 px-3 flex justify-center items-center gap-x-2 rounded-full bg-white/30 font-semibold text-white text-sm">
+              <i className="bi bi-arrow-up-right"></i>
+            </span>
+          </Link>
         </div>
 
-        <Link href={"/create-campaign"} className="inline-flex items-center gap-x-3 btn lime p-1.5 ps-4">
-          Create new campaign
-          <span className="py-2 px-3 flex justify-center items-center gap-x-2 rounded-full bg-white/30 font-semibold text-white text-sm">
-            <i className="bi bi-arrow-up-right"></i>
-          </span>
-        </Link>
-      </div>
+        <TabsList className="shadow rounded-md divide-x border border-white overflow-hidden mb-10">
+          <TabsTrigger className="px-8" value="active">Active</TabsTrigger>
+          <TabsTrigger className="px-8" value="ended">Ended</TabsTrigger>
+          <TabsTrigger className="px-8" value="funded">Funded</TabsTrigger>
+        </TabsList>
 
-      <div>
-        {myCampaigns?.length === 0 && (
-          <div className="text-center space-y-3">
-            <i className="bi bi-emoji-frown-fill text-3xl"></i>
-            <h2 className="text-xl">No Campaigns Available</h2>
-            <article className="">You haven&apos;t created any campaigns yet. Start by creating your first campaign to see it listed here!</article>
-          </div>
-        )}
-      </div>
+        <TabsContent value='active' className='px-0'>
+          <Suspense>
+            <MyActiveCampaigns />
+          </Suspense>
+        </TabsContent>
 
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-y-10 sm:gap-x-6">
-        {myCampaigns?.map((campaign, index) => (
-          <CampaignCard key={index} campaign={campaign} />
-        ))}
-      </div>
+        <TabsContent value='ended' className='px-0'>
+          <Suspense>
+            <MyEndedCampaigns />
+          </Suspense>
+        </TabsContent>
+
+        <TabsContent value='funded' className='px-0'>
+          <Suspense>
+            <MyFundedCampaigns />
+          </Suspense>
+        </TabsContent>
+      </Tabs>
     </main>
   )
 }

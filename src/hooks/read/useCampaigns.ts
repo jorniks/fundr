@@ -66,7 +66,39 @@ export const useEndedCampaigns = () => {
   return !endedCampaigns?.length ? loadingCampaigns : endedCampaigns;
 }
 
-export const useMyCampaigns = () => {
+export const useMyActiveCampaigns = () => {
+  const { account } = useWeb3React()
+  const contract = useAppContract()
+  const [myCampaigns, setMyCampaigns] = useState<CampaignType[]>([])
+  const [loadingCampaigns, setLoadingCampaigns] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => (placeholderCampaign)))
+
+  useEffect(() => {
+    const fetchMyCampaigns = async () => {
+      try {
+        const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
+        const filteredMyEvents = campaigns?.filter(({ endDate }) => (endDate * 1000 > Date.now()));
+
+        if (filteredMyEvents?.length === 0) {
+          setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
+        }
+
+        const sortedArrayOfEvents = [...filteredMyEvents]?.sort(
+          (currentEvent, nextEvent) => currentEvent?.endDate - nextEvent?.endDate
+        );
+
+        setMyCampaigns(sortedArrayOfEvents);
+      } catch (getMyCampaignsError) {
+        console.log('getMyCampaignsError', getMyCampaignsError);
+      }
+    }
+
+    fetchMyCampaigns()
+  }, [account, contract])
+  
+  return !myCampaigns?.length ? loadingCampaigns : myCampaigns;
+}
+
+export const useMyEndedCampaigns = () => {
   const { account } = useWeb3React()
   const contract = useAppContract()
   const [myCampaigns, setMyCampaigns] = useState<CampaignType[]>([])
@@ -76,7 +108,39 @@ export const useMyCampaigns = () => {
     const fetchMyCampaigns = async () => {
       try {
         const campaigns = await contract?.getCampaignsByUser(account)
-        const filteredMyEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 > Date.now());
+        const filteredMyEvents = campaigns?.filter((proposal: { endDate: number }) => proposal?.endDate * 1000 < Date.now());
+
+        if (filteredMyEvents?.length === 0) {
+          setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
+        }
+
+        const sortedArrayOfEvents = [...filteredMyEvents]?.sort(
+          (currentEvent, nextEvent) => currentEvent?.endDate - nextEvent?.endDate
+        );
+
+        setMyCampaigns(sortedArrayOfEvents);
+      } catch (getMyCampaignsError) {
+        console.log('getMyCampaignsError', getMyCampaignsError);
+      }
+    }
+
+    fetchMyCampaigns()
+  }, [account, contract])
+  
+  return !myCampaigns?.length ? loadingCampaigns : myCampaigns;
+}
+
+export const useMyFundedCampaigns = () => {
+  const { account } = useWeb3React()
+  const contract = useAppContract()
+  const [myCampaigns, setMyCampaigns] = useState<CampaignType[]>([])
+  const [loadingCampaigns, setLoadingCampaigns] = useState<CampaignType[]>(Array.from({ length: 6 }, (_, index): CampaignType => (placeholderCampaign)))
+
+  useEffect(() => {
+    const fetchMyCampaigns = async () => {
+      try {
+        const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
+        const filteredMyEvents = campaigns?.filter(({ goal, totalRaised }) => totalRaised === goal);
 
         if (filteredMyEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
