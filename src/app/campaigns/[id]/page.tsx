@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
 
-import { formatNumberScale, shortenAddress } from '@/functions/format'
+import { formatNumber, formatNumberScale, shortenAddress } from '@/functions/format'
 import CountdownTimer from '@/components/ui/count-down-timer'
 import { Progress } from '@/components/ui/progress'
 import { convertToDecimalValue, retrievePreferredToken } from '@/functions/misc-functions'
@@ -25,6 +25,7 @@ import { useAppContract } from "@/hooks/services/useContract";
 import { useClaimFunds } from "@/hooks/write/useClaimFunds";
 import { useWithdrawContribution } from "@/hooks/write/useWithdrawContribution";
 import { useCancelCampaign } from "@/hooks/write/useCancelCampaign";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 
 const CampaignDetail = () => {
@@ -48,6 +49,7 @@ const CampaignDetail = () => {
   const loadData = useCallback(
     () => {
       getCampaignDetails(Number(id)).then(response => {
+        console.log(response);
         if (response?.title) {
           setTokenInfo(retrievePreferredToken(response.preferredToken))
           const goal = convertToDecimalValue(String(response?.goal), response?.tokenDecimals)
@@ -78,7 +80,7 @@ const CampaignDetail = () => {
       {!campaignInfo?.creator ?
         <LoadingCampaignDetails />
       :
-        <section className="grid lg:grid-cols-6 lg:gap-x-8 xl:gap-x-12 lg:items-start justify-center">
+        <section className="grid lg:grid-cols-6 lg:gap-8 xl:gap-12 lg:items-start justify-center">
           <aside className="lg:col-span-4 mt-10 lg:mt-0 space-y-4">
             <h1 className="">{campaignInfo?.title}</h1>
 
@@ -149,6 +151,35 @@ const CampaignDetail = () => {
                 }
               </div>
             }
+          </aside>
+
+          <aside className="lg:col-span-4 p-4 ring-2 ring-gray-700 rounded-lg">
+            <h2 className="pb-6">Contributors</h2>
+
+            <ScrollArea className="h-96">
+              {campaignInfo?.contributions?.length ?
+                campaignInfo?.contributions?.map((contributor, index) => (
+                  <article key={index} className="flex items-start justify-between py-3.5">
+                    <aside className="flex items-start gap-x-4">
+                      <h6 className="bg-lime-700 shadow-white shadow-inner rounded-full flex items-center justify-center size-8">
+                        <i className="bi bi-person-bounding-box"></i>
+                      </h6>
+
+                      <div className="font-semibold">
+                        {shortenAddress(contributor?.contributor)}
+                        <span className="block text-xs font-normal">{moment.unix(Number(BigInt(contributor?.timestamp))).format("MMM DD, YYYY | H:m")}</span>
+                      </div>
+                    </aside>
+
+                    <aside className="text-sm">
+                      <span className="text-xl">{formatNumber(Number(BigInt(contributor?.amount)))}</span> {tokenInfo?.name}
+                    </aside>
+                  </article>
+                ))
+              :
+                <article className="py-3 font-medium text-lg">No contributions have been made yet</article>
+              }
+            </ScrollArea>
           </aside>
         </section>
       }

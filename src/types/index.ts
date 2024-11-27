@@ -16,7 +16,7 @@ export type CampaignType = {
   preferredToken: string;
   title: string;
   totalRaised: number;
-  contribution: Contribution[];
+  contributions: Contribution[];
 }
 
 export type Contribution = {
