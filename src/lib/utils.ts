@@ -54,4 +54,5 @@ export const placeholderCampaign: CampaignType = {
   preferredToken: "",
   title: "",
   totalRaised: 0,
+  contributions: []
 }
