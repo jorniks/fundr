@@ -49,7 +49,6 @@ const CampaignDetail = () => {
   const loadData = useCallback(
     () => {
       getCampaignDetails(Number(id)).then(response => {
-        console.log(response);
         if (response?.title) {
           setTokenInfo(retrievePreferredToken(response.preferredToken))
           const goal = convertToDecimalValue(String(response?.goal), response?.tokenDecimals)
@@ -111,10 +110,14 @@ const CampaignDetail = () => {
               <div className="space-y-2">
                 <h3 className="">Funds Donated to this campaign</h3>
 
-                <div className="flex items-center gap-2">
-                  <h2> {formatNumberScale(amountRaised)}</h2>
-                  <h2>/</h2>
-                  <h2> {formatNumberScale(targetAmount)}</h2> {tokenInfo?.name}
+                <div className="flex items-end justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <h2> {formatNumberScale(amountRaised)}</h2>
+                    <h2>/</h2>
+                    <h2> {formatNumberScale(targetAmount)}</h2> {tokenInfo?.name}
+                  </div>
+
+                  <span className="font-medium text-sm"> {percentageGotten}%</span>
                 </div>
 
                 <Progress value={percentageGotten} />

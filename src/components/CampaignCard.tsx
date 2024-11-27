@@ -37,7 +37,7 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
         <CountdownTimer timestamp={Number(BigInt(campaign?.endDate))} clockOnly={false} />
 
         <div className="flex justify-between items-center font-medium mt-3">
-          <h6 className="">Goal: {formatNumberScale(targetAmount)} <span className="text-xs">{tokenInfo?.name}</span></h6>
+          <h6 className="">{formatNumberScale(amountRaised)} / {formatNumberScale(targetAmount)} <span className="text-xs">{tokenInfo?.name}</span></h6>
           <h6 className="">{percentageGotten}%</h6>
         </div>
 
