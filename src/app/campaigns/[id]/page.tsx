@@ -106,8 +106,8 @@ const CampaignDetail = () => {
           </aside>
 
           <aside className="lg:col-span-2 pt-5 lg:pt-0 space-y-12">
-            <div className="pt-8 space-y-10">
-              <div className="space-y-2">
+            <div className="pt-8">
+              <div className="space-y-2 mb-10">
                 <h3 className="">Funds Donated to this campaign</h3>
 
                 <div className="flex items-end justify-between gap-2">
@@ -129,7 +129,7 @@ const CampaignDetail = () => {
             {(campaignInfo?.creator !== account) ?
               <div className="">
                 {(CampaignStatus[campaignInfo?.status] === "Cancelled") ?
-                  <Button className="btn lime w-full py-3" onClick={() => withdrawContribution(campaignInfo?.id)}>Withdraw Contribution</Button>
+                  <Button className="btn lime w-full py-3 rounded" onClick={() => withdrawContribution(campaignInfo?.id)}>Withdraw Contribution</Button>
                 :
                   <div className="space-y-4">
                     <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount to contribute" />

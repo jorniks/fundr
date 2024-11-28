@@ -28,9 +28,9 @@ const CountdownTimer = ({ timestamp, clockOnly = true }: CountdownTimerProps) =>
     return () => clearInterval(intervalId);
   }, [timestamp])
   
-  if(timeLeft.isLoading) return <span>Loading event time</span>;
+  if(timeLeft.isLoading) return <span>Loading campaign time</span>;
   
-  if (timeLeft.completed) return <span>Event has ended</span>;
+  if (timeLeft.completed) return <span>Campaign has ended</span>;
   
   return (
     clockOnly ?
