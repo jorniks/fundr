@@ -14,7 +14,7 @@ export const useActiveCampaigns = () => {
     const fetchActiveCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getAllCampaigns()
-        const filteredActiveEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 > Date.now() && CampaignStatus[status] === 'Active'));
+        const filteredActiveEvents = campaigns?.filter(({ status, goal, totalRaised, tokenDecimals }) => (CampaignStatus[status] === 'Active' && Number(BigInt(totalRaised)) <= convertToDecimalValue(String(goal), tokenDecimals)));
         
         if (filteredActiveEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
@@ -45,14 +45,14 @@ export const useEndedCampaigns = () => {
     const fetchEndedCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getAllCampaigns()
-        const filteredEndedEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 < Date.now() || CampaignStatus[status] !== 'Active'));
+        const filteredEndedEvents = campaigns?.filter(({ status, goal, totalRaised, tokenDecimals }) => (CampaignStatus[status] !== 'Active' || Number(BigInt(totalRaised)) >= convertToDecimalValue(String(goal), tokenDecimals)));
 
         if (filteredEndedEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
         }
 
         const sortedArrayOfEvents = [...filteredEndedEvents]?.sort(
-          (currentEvent, nextEvent) => Number(BigInt(currentEvent?.endDate)) - Number(BigInt(nextEvent?.endDate))
+          (currentEvent, nextEvent) => Number(BigInt(nextEvent?.endDate)) - Number(BigInt(currentEvent?.endDate))
         );
 
         setEndedCampaigns(sortedArrayOfEvents);
@@ -77,13 +77,13 @@ export const useMyActiveCampaigns = () => {
     const fetchMyCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
-        const filteredMyEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 > Date.now() && CampaignStatus[status] === 'Active'));
+        const myFilteredEvents = campaigns?.filter(({ status, goal, totalRaised, tokenDecimals }) => (CampaignStatus[status] === 'Active' && Number(BigInt(totalRaised)) <= convertToDecimalValue(String(goal), tokenDecimals)));
 
-        if (filteredMyEvents?.length === 0) {
+        if (myFilteredEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
         }
 
-        const sortedArrayOfEvents = [...filteredMyEvents]?.sort(
+        const sortedArrayOfEvents = [...myFilteredEvents]?.sort(
           (currentEvent, nextEvent) => Number(BigInt(currentEvent?.endDate)) - Number(BigInt(nextEvent?.endDate))
         );
 
@@ -109,14 +109,14 @@ export const useMyEndedCampaigns = () => {
     const fetchMyCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
-        const filteredMyEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 < Date.now() || CampaignStatus[status] !== 'Active'));
+        const myFilteredEvents = campaigns?.filter(({ status, goal, totalRaised, tokenDecimals }) => (CampaignStatus[status] !== 'Active' && Number(BigInt(totalRaised)) < convertToDecimalValue(String(goal), tokenDecimals)));
 
-        if (filteredMyEvents?.length === 0) {
+        if (myFilteredEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
         }
 
-        const sortedArrayOfEvents = [...filteredMyEvents]?.sort(
-          (currentEvent, nextEvent) => Number(BigInt(currentEvent?.endDate)) - Number(BigInt(nextEvent?.endDate))
+        const sortedArrayOfEvents = [...myFilteredEvents]?.sort(
+          (currentEvent, nextEvent) => Number(BigInt(nextEvent?.endDate)) - Number(BigInt(currentEvent?.endDate))
         );
 
         setMyCampaigns(sortedArrayOfEvents);
