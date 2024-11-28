@@ -147,10 +147,9 @@ const CampaignDetail = () => {
                     {!account ?
                       <NotConnectedWalletButton />
                     :
-                      !amountToContribute ?
-                        <Button className="w-full text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
-                      :
-                        <Button className="w-full text-base py-3 btn lime font-medium" onClick={() => {contributeToCampaign(campaignInfo?.id,   tokenInfo?.decimal)}}>Donate</Button>
+                      <Button className={`w-full text-base py-3 btn lime font-medium ${!amountToContribute && "pointer-events-none opacity-50"}`}
+                        onClick={() => amountToContribute && contributeToCampaign(campaignInfo?.id, tokenInfo?.decimal)}
+                      >{!amountToContribute ? "Enter Donation" : "Send Donation"}</Button>
                     }
                   </div>
                 }
@@ -159,7 +158,7 @@ const CampaignDetail = () => {
               <div className="">
                 {CampaignStatus[campaignInfo?.status] !== "Claimed" && amountRaised >= targetAmount ?
                   <Button className="btn lime w-full py-3" onClick={() => claimFunds(campaignInfo?.id)}>Claim Funds</Button>
-                :
+                : (CampaignStatus[campaignInfo?.status] === 'Active' && amountRaised < targetAmount) &&
                   <Button className="btn lime w-full py-3" onClick={() => cancelCampaign(campaignInfo?.id)}>Cancel Campaign</Button>
                 }
               </div>
