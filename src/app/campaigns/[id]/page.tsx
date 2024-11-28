@@ -123,14 +123,24 @@ const CampaignDetail = () => {
                 <Progress value={percentageGotten < 100 ? percentageGotten : 100} />
               </div>
 
-              <CountdownTimer timestamp={Number(BigInt(campaignInfo?.endDate))} clockOnly={false} />
+              {(CampaignStatus[campaignInfo?.status] === 'Active' && amountRaised < targetAmount) ?
+                <CountdownTimer timestamp={Number(BigInt(campaignInfo?.endDate))} clockOnly={false} />
+              :
+                <article className="sm:text-xl">
+                  {CampaignStatus[campaignInfo?.status] === 'Cancelled' ?
+                    <span className="">This campaign was cancelled by the creator. Donated funds have been returned to the donors.</span>
+                  : CampaignStatus[campaignInfo?.status] === 'Claimed' ?
+                    <span className="">Donated campaign funds have been claimed by the campaign creator.</span>
+                  :
+                    <span className="">The donation period for this campaign has ended.</span>
+                  }
+                </article>
+              }
             </div>
 
             {(campaignInfo?.creator !== account) ?
               <div className="">
-                {(CampaignStatus[campaignInfo?.status] === "Cancelled") ?
-                  <Button className="btn lime w-full py-3 rounded" onClick={() => withdrawContribution(campaignInfo?.id)}>Withdraw Contribution</Button>
-                :
+                {(CampaignStatus[campaignInfo?.status] === "Active" && amountRaised < targetAmount) &&
                   <div className="space-y-4">
                     <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount to contribute" />
                     
@@ -138,19 +148,19 @@ const CampaignDetail = () => {
                       <NotConnectedWalletButton />
                     :
                       !amountToContribute ?
-                        <Button className="w-full rounded text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
+                        <Button className="w-full text-base py-3 btn lime font-medium pointer-events-none opacity-50">Enter Amount</Button>
                       :
-                        <Button className="w-full rounded text-base py-3 btn lime font-medium" onClick={() => {contributeToCampaign(campaignInfo?.id,   tokenInfo?.decimal)}}>Donate</Button>
+                        <Button className="w-full text-base py-3 btn lime font-medium" onClick={() => {contributeToCampaign(campaignInfo?.id,   tokenInfo?.decimal)}}>Donate</Button>
                     }
                   </div>
                 }
               </div>
             :
               <div className="">
-                {CampaignStatus[campaignInfo?.status] === "Ended" ?
-                  <Button className="btn lime w-full py-3 rounded" onClick={() => claimFunds(campaignInfo?.id)}>Claim Funds</Button>
+                {CampaignStatus[campaignInfo?.status] !== "Claimed" && amountRaised >= targetAmount ?
+                  <Button className="btn lime w-full py-3" onClick={() => claimFunds(campaignInfo?.id)}>Claim Funds</Button>
                 :
-                  <Button className="btn lime w-full py-3 rounded" onClick={() => cancelCampaign(campaignInfo?.id)}>Cancel Campaign</Button>
+                  <Button className="btn lime w-full py-3" onClick={() => cancelCampaign(campaignInfo?.id)}>Cancel Campaign</Button>
                 }
               </div>
             }
