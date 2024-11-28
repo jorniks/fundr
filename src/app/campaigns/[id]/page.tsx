@@ -120,7 +120,7 @@ const CampaignDetail = () => {
                   <span className="font-medium text-sm"> {percentageGotten}%</span>
                 </div>
 
-                <Progress value={percentageGotten} />
+                <Progress value={percentageGotten < 100 ? percentageGotten : 100} />
               </div>
 
               <CountdownTimer timestamp={Number(BigInt(campaignInfo?.endDate))} clockOnly={false} />

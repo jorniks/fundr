@@ -1,7 +1,7 @@
 import { useWeb3React } from "@web3-react/core"
 import { useAppContract } from "../services/useContract"
 import { useEffect, useState } from "react"
-import { CampaignType } from "@/types"
+import { CampaignStatus, CampaignType } from "@/types"
 import { placeholderCampaign } from "@/lib/utils"
 import { convertToDecimalValue } from "@/functions/misc-functions"
 
@@ -14,7 +14,7 @@ export const useActiveCampaigns = () => {
     const fetchActiveCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getAllCampaigns()
-        const filteredActiveEvents = campaigns?.filter(({ endDate }) => Number(BigInt(endDate)) * 1000 > Date.now());
+        const filteredActiveEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 > Date.now() && CampaignStatus[status] === 'Active'));
         
         if (filteredActiveEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
@@ -45,7 +45,7 @@ export const useEndedCampaigns = () => {
     const fetchEndedCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getAllCampaigns()
-        const filteredEndedEvents = campaigns?.filter(({ endDate }) => Number(BigInt(endDate)) * 1000 < Date.now());
+        const filteredEndedEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 < Date.now() || CampaignStatus[status] !== 'Active'));
 
         if (filteredEndedEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
@@ -77,7 +77,7 @@ export const useMyActiveCampaigns = () => {
     const fetchMyCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
-        const filteredMyEvents = campaigns?.filter(({ endDate }) => (Number(BigInt(endDate)) * 1000 > Date.now()));
+        const filteredMyEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 > Date.now() && CampaignStatus[status] === 'Active'));
 
         if (filteredMyEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
@@ -109,7 +109,7 @@ export const useMyEndedCampaigns = () => {
     const fetchMyCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
-        const filteredMyEvents = campaigns?.filter(({ endDate }) => Number(BigInt(endDate)) * 1000 < Date.now());
+        const filteredMyEvents = campaigns?.filter(({ endDate, status }) => (Number(BigInt(endDate)) * 1000 < Date.now() || CampaignStatus[status] !== 'Active'));
 
         if (filteredMyEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
@@ -141,7 +141,7 @@ export const useMyFundedCampaigns = () => {
     const fetchMyCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getCampaignsByUser(account)
-        const filteredMyEvents = campaigns?.filter(({ goal, totalRaised, tokenDecimals }) => Number(BigInt(totalRaised)) === convertToDecimalValue(String(goal), tokenDecimals));
+        const filteredMyEvents = campaigns?.filter(({ goal, totalRaised, tokenDecimals }) => Number(BigInt(totalRaised)) >= convertToDecimalValue(String(goal), tokenDecimals));
 
         if (filteredMyEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
