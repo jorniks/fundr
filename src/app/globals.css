@@ -64,7 +64,7 @@
   }
 
   .btn {
-    @apply outline-none shadow-md transition-all duration-500 rounded-full hover:shadow-lg font-medium disabled:opacity-60 disabled:pointer-events-none
+    @apply outline-none shadow-md transition-all duration-500 rounded hover:shadow-lg font-medium disabled:opacity-60 disabled:pointer-events-none
   }
 
   .lime {
