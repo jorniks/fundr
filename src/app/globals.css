@@ -72,7 +72,7 @@
   }
 
   .spray {
-    @apply hover:bg-spray-500 bg-spray-600 text-white
+    @apply hover:bg-spray-600 bg-spray-700 text-white
   }
 
   .spray-dark {

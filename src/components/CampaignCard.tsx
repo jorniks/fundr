@@ -29,14 +29,14 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
           </div>
           
           <span className={`text-sm px-2.5 rounded-full
-            ${CampaignStatus[campaign?.status] === 'Active' ?
-              'lime'
-            : CampaignStatus[campaign?.status] === 'Claimed' ?
+            ${(CampaignStatus[campaign?.status] === 'Claimed' || amountRaised >= targetAmount) ?
               'spray'
+            : CampaignStatus[campaign?.status] === 'Active' ?
+              'lime'
             :
               'bg-red-500'}`}
           >
-            {CampaignStatus[campaign?.status]}
+            {amountRaised >= targetAmount ? 'Funded' : CampaignStatus[campaign?.status]}
           </span>
         </div>
 
@@ -49,10 +49,12 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
         {(CampaignStatus[campaign?.status] === 'Active' && amountRaised < targetAmount) ?
           <CountdownTimer timestamp={Number(BigInt(campaign?.endDate))} clockOnly={false} />
         :
-          <article className="">
+          <article className="text-sm font-medium">
             {CampaignStatus[campaign?.status] === 'Cancelled' ?
-              <span className="">This campaign was cancelled by the creator. Donated funds have been returned to the donors.</span>
-            : CampaignStatus[campaign?.status] === 'Claimed' ?
+              <span className="">This campaign was cancelled by the creator.</span>
+            : (amountRaised >= targetAmount && CampaignStatus[campaign?.status] !== 'Claimed') ?
+                <span className="">This campaign is fully funded</span>
+              : CampaignStatus[campaign?.status] === 'Claimed' ?
                 <span className="">Donated campaign funds have been claimed by the campaign creator.</span>
               :
                 <span className="">The donation period for this campaign has ended.</span>
