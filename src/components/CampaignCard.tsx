@@ -36,7 +36,7 @@ const CampaignCard = ({ campaign }: { campaign: CampaignType }) => {
             :
               'bg-red-500'}`}
           >
-            {amountRaised >= targetAmount ? 'Funded' : CampaignStatus[campaign?.status]}
+            {(CampaignStatus[campaign?.status] !== 'Claimed' && amountRaised >= targetAmount) ? 'Funded' : CampaignStatus[campaign?.status]}
           </span>
         </div>
 
