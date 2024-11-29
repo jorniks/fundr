@@ -68,6 +68,8 @@ const CampaignDetail = () => {
     loadData()
 
     contract?.on("ContributionMade", loadData)
+    contract?.on("CampaignCancelled", loadData)
+    contract?.on("FundsClaimed", loadData)
   
     return () => {
       contract?.removeAllListeners()
@@ -145,7 +147,7 @@ const CampaignDetail = () => {
                     <input type="number" min={0} className="text-box" value={amountToContribute} onChange={(e) => setAmountToContribute(e.target.value)} placeholder="Enter amount to contribute" />
                     
                     {!account ?
-                      <NotConnectedWalletButton />
+                      <NotConnectedWalletButton buttonClass="rounded-sm w-full" />
                     :
                       <Button className={`w-full text-base py-3 btn lime font-medium ${!amountToContribute && "pointer-events-none opacity-50"}`}
                         onClick={() => amountToContribute && contributeToCampaign(campaignInfo?.id, tokenInfo?.decimal)}
