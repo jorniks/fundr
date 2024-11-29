@@ -14,7 +14,7 @@ export const useActiveCampaigns = () => {
     const fetchActiveCampaigns = async () => {
       try {
         const campaigns: CampaignType[] = await contract?.getAllCampaigns()
-        const filteredActiveEvents = campaigns?.filter(({ endDate, status, goal, totalRaised, tokenDecimals }) => (Number(BigInt(endDate)) * 1000 > Date.now() && CampaignStatus[status] === 'Active' && Number(BigInt(totalRaised)) <= convertToDecimalValue(String(goal), tokenDecimals)));
+        const filteredActiveEvents = campaigns?.filter(({ endDate, status, goal, totalRaised, tokenDecimals }) => (Number(BigInt(endDate)) * 1000 > Date.now() && CampaignStatus[status] === 'Active' && Number(BigInt(totalRaised)) < convertToDecimalValue(String(goal), tokenDecimals)));
         
         if (filteredActiveEvents?.length === 0) {
           setLoadingCampaigns(prev => (prev.length > 0 ? [] : prev));
