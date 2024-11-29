@@ -60,7 +60,7 @@ const ConnectedWalletButton = () => {
             <SelectLabel>
               <div className="font-semibold">
                 {tokenSymbol}
-                <p className="text-xs text-white/30">{ truncateValue(networkTokenBalance, 12) }</p>
+                <p className="text-xs text-white/30">{ truncateValue(networkTokenBalance, 8) }</p>
               </div>
             </SelectLabel>
 
@@ -68,7 +68,7 @@ const ConnectedWalletButton = () => {
               <SelectLabel key={index}>
                 <div className="font-semibold">
                   {tokenBalance.name}
-                  <p className="text-xs text-white/30">{ truncateValue(tokenBalance.balance, 8) }</p>
+                  <p className="text-xs text-white/30">{ truncateValue(tokenBalance.balance, 4) }</p>
                 </div>
               </SelectLabel>
             ))}
