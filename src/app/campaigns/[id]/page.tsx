@@ -158,9 +158,9 @@ const CampaignDetail = () => {
               </div>
             :
               <div className="">
-                {CampaignStatus[campaignInfo?.status] !== "Claimed" && amountRaised >= targetAmount ?
+                {(CampaignStatus[campaignInfo?.status] !== "Claimed" && amountRaised >= targetAmount) || (CampaignStatus[campaignInfo?.status] !== "Claimed" && Number(BigInt(campaignInfo?.endDate)) * 1000 < Date.now())?
                   <Button className="btn lime w-full py-3" onClick={() => claimFunds(campaignInfo?.id)}>Claim Funds</Button>
-                : (CampaignStatus[campaignInfo?.status] === 'Active' && amountRaised < targetAmount) &&
+                : (CampaignStatus[campaignInfo?.status] === 'Active' && amountRaised < targetAmount && Number(BigInt(campaignInfo?.endDate)) * 1000 > Date.now()) &&
                   <Button className="btn lime w-full py-3" onClick={() => cancelCampaign(campaignInfo?.id)}>Cancel Campaign</Button>
                 }
               </div>
